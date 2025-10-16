@@ -1,0 +1,4714 @@
+DESENVOLVIMENTO - APP ESTABILIZA
+🔑 INFORMAÇÕES TÉCNICAS E CREDENCIAIS
+Telegram Bot:
+
+Token: 8410080667:AAGCIqSUs3tL24K0KLAG4qA22KRNbHj__6w
+Username do Bot: @estabiliza_suport_bot
+Timeout API: 30000ms (30 segundos)
+Máximo de Retries: 3 tentativas
+
+Contatos e Links:
+
+WhatsApp: +5548996929261
+Instagram: @estabiliza (ou username específico)
+
+Configurações do App:
+
+Nome: Estabiliza
+Versão: 1.0.0
+SDK Expo: 54
+Platform: Android
+
+
+🎨 MELHORIAS GERAIS DE DESIGN E UX
+1. SISTEMA DE DESIGN
+Paleta de Cores:
+
+// Cores principais
+const colors = {
+  primary: '#4A90E2',        // Azul calmo
+  secondary: '#7B68EE',      // Roxo suave
+  success: '#50C878',        // Verde menta
+  error: '#FF6B6B',          // Vermelho coral
+  warning: '#FFD93D',        // Amarelo ouro
+  info: '#6BCB77',           // Verde água
+  
+  // Neutros (Light Mode)
+  textPrimary: '#2D3436',
+  textSecondary: '#636E72',
+  textTertiary: '#B2BEC3',
+  backgroundLight: '#FFFFFF',
+  backgroundCard: '#F8F9FA',
+  border: '#DFE6E9',
+  
+  // Dark Mode
+  darkBackground: '#1E1E1E',
+  darkCard: '#2C2C2C',
+  darkText: '#E0E0E0',
+  darkBorder: '#3E3E3E',
+};
+
+GRADIENTES
+
+const gradients = {
+  primary: ['#4A90E2', '#7B68EE'],
+  success: ['#50C878', '#6BCB77'],
+  header: ['#4A90E2', '#5B7FD8'],
+};
+
+Tipografia
+
+const typography = {
+  // Tamanhos
+  h1: { fontSize: 32, fontWeight: 'bold', lineHeight: 40 },
+  h2: { fontSize: 24, fontWeight: '600', lineHeight: 32 },
+  h3: { fontSize: 20, fontWeight: '600', lineHeight: 28 },
+  body: { fontSize: 16, fontWeight: 'normal', lineHeight: 24 },
+  caption: { fontSize: 14, fontWeight: 'normal', lineHeight: 20 },
+  small: { fontSize: 12, fontWeight: 'normal', lineHeight: 16 },
+};
+
+Espaçamentos Padronizados:
+javascriptconst spacing = {
+  xs: 4,
+  sm: 8,
+  md: 16,
+  lg: 24,
+  xl: 32,
+  xxl: 40,
+};
+
+Sombras
+
+const shadows = {
+  subtle: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  medium: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  strong: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.2,
+    shadowRadius: 16,
+    elevation: 8,
+  },
+};
+
+Bordas:
+javascriptconst borderRadius = {
+  small: 8,
+  medium: 12,
+  large: 16,
+  full: 999,
+};
+2. TEMA CLARO E ESCURO
+Implementar Context API para alternar entre temas:
+
+Detectar preferência do sistema automaticamente
+Permitir usuário escolher manualmente nas configurações
+Salvar preferência no AsyncStorage
+Aplicar cores apropriadas em todos os componentes
+
+3. ANIMAÇÕES E FEEDBACK VISUAL
+Animações a Implementar (usar react-native-reanimated):
+
+Fade in/out ao abrir/fechar modais (duration: 300ms)
+Scale animation ao pressionar botões (scale: 0.95, duration: 100ms)
+Slide up para BottomSheet (duration: 250ms)
+Checkmark animado ao completar hábitos (scale + rotate)
+Confetti ou celebração ao conquistar badges
+Skeleton loading com shimmer effect
+Pull-to-refresh com indicador animado
+Swipe gestures com feedback visual
+
+Estados Visuais de Botões:
+javascript// Estados: normal, pressed, disabled, loading, success
+const buttonStates = {
+  normal: { opacity: 1, scale: 1 },
+  pressed: { opacity: 0.8, scale: 0.95 },
+  disabled: { opacity: 0.5 },
+  loading: { spinner visible, text "Carregando..." },
+  success: { checkmark icon, green background, 2s duration },
+};
+4. NAVEGAÇÃO E ESTRUTURA
+Bottom Tabs Melhoradas:
+javascript// Configuração das tabs
+const tabs = [
+  { 
+    name: 'Início', 
+    icon: 'home',
+    activeColor: colors.primary,
+    component: HomeScreen 
+  },
+  { 
+    name: 'Lembretes', 
+    icon: 'notifications',
+    badge: true, // mostrar contador
+    activeColor: colors.primary,
+    component: RemindersScreen 
+  },
+  { 
+    name: 'Humor', 
+    icon: 'happy',
+    activeColor: colors.primary,
+    component: MoodScreen 
+  },
+  { 
+    name: 'Suporte', 
+    icon: 'chatbubbles',
+    badge: true, // mensagens não lidas
+    activeColor: colors.primary,
+    component: SupportScreen 
+  },
+  { 
+    name: 'Perfil', 
+    icon: 'person',
+    activeColor: colors.primary,
+    component: ProfileScreen 
+  },
+];
+
+// Estilo
+- Ícones: tamanho 24px
+- Label: fontSize 12px
+- Altura da tab bar: 60px
+- Animação no tab ativo: scale 1.1 + cor primária
+- Badge: círculo vermelho com número
+Headers Personalizados:
+javascript// Header padrão
+- Background: gradiente primary
+- Título: branco, centralizado
+- Avatar do usuário: canto direito (32x32px)
+- Botão voltar: canto esquerdo (quando aplicável)
+- Altura: 60px (iOS), 56px (Android)
+- Status bar: light (texto branco)
+5. COMPONENTES REUTILIZÁVEIS A CRIAR
+Button Component:
+javascript// Props: 
+- variant: 'primary' | 'secondary' | 'ghost' | 'danger'
+- size: 'small' | 'medium' | 'large'
+- loading: boolean
+- disabled: boolean
+- onPress: function
+- icon: string (Ionicons name)
+- children: string (texto do botão)
+
+// Variantes:
+primary: background primary, texto branco, sombra medium
+secondary: border primary, texto primary, sem sombra
+ghost: sem background, texto primary
+danger: background error, texto branco
+
+// Estados:
+- Normal
+- Pressed (scale 0.95, opacity 0.8)
+- Loading (spinner + texto "Carregando...")
+- Disabled (opacity 0.5)
+- Success (checkmark + background success por 2s)
+Input Component:
+javascript// Props:
+- label: string
+- placeholder: string
+- value: string
+- onChangeText: function
+- error: string
+- maxLength: number
+- icon: string (Ionicons)
+- secureTextEntry: boolean
+- keyboardType: string
+- multiline: boolean
+
+// Features:
+- Label flutuante (sobe ao focar)
+- Ícone à esquerda (opcional)
+- Validação visual (verde=válido, vermelho=erro)
+- Mensagem de erro abaixo do input (texto pequeno, vermelho)
+- Contador de caracteres (quando maxLength definido)
+- Border color muda ao focar (primary)
+- Altura: 48px (single line), auto (multiline)
+Card Component:
+javascript// Props:
+- children: ReactNode
+- onPress: function (opcional)
+- variant: 'default' | 'elevated' | 'outlined'
+- padding: number (default: md)
+
+// Estilo:
+- Background: backgroundCard
+- Border radius: medium
+- Padding: spacing.md
+- Sombra: subtle (elevated variant tem medium)
+- Outlined: sem sombra, border 1px
+- Pressable se onPress definido
+Toast/Snackbar Component:
+javascript// Props:
+- message: string
+- type: 'success' | 'error' | 'info' | 'warning'
+- duration: number (ms, default 3000)
+- action: { label: string, onPress: function } (opcional)
+- position: 'top' | 'bottom' (default: bottom)
+
+// Estilo por tipo:
+success: background success, ícone ✓
+error: background error, ícone ⚠️, duration 5000
+info: background info, ícone ℹ️
+warning: background warning, ícone ⚠️
+
+// Comportamento:
+- Fade in/out animation
+- Auto dismiss após duration
+- Swipe to dismiss
+- Múltiplos toasts em fila
+- Posição bottom no Android, top no iOS
+Modal Component:
+javascript// Props:
+- visible: boolean
+- onClose: function
+- title: string
+- children: ReactNode
+- size: 'small' | 'medium' | 'large' | 'fullscreen'
+- showCloseButton: boolean (default: true)
+
+// Estilo:
+- Backdrop: rgba(0,0,0,0.5) com blur (iOS)
+- Container: backgroundCard, borderRadius large
+- Header: título + botão X
+- Body: padding lg, scrollable
+- Animação: fade + scale from 0.9 to 1
+EmptyState Component:
+javascript// Props:
+- illustration: ReactNode | string (url)
+- title: string
+- description: string
+- actionLabel: string (opcional)
+- onAction: function (opcional)
+
+// Estilo:
+- Centralizado vertical e horizontalmente
+- Ilustração: 200x200px
+- Título: h2, textPrimary, center
+- Descrição: body, textSecondary, center, maxWidth 80%
+- Botão ação: primary, medium
+- Spacing: xl entre elementos
+LoadingSkeleton Component:
+javascript// Props:
+- type: 'card' | 'list' | 'text' | 'avatar' | 'custom'
+- count: number (quantos itens mostrar)
+- animated: boolean (default: true)
+
+// Estilo:
+- Background: border (cinza claro)
+- Shimmer animation (gradiente se movendo)
+- Border radius conforme tipo
+- Altura e largura conforme tipo
+
+// Tipos pré-definidos:
+card: retângulo 100% width, 120px height
+list: múltiplas linhas horizontais
+text: linha de texto (variando larguras)
+avatar: círculo 48x48px
+Avatar Component:
+javascript// Props:
+- source: string (url) | null
+- name: string (para inicial)
+- size: 'small' | 'medium' | 'large' (32/48/64px)
+- onPress: function (opcional)
+
+// Comportamento:
+- Se source: mostra imagem
+- Se não: mostra inicial do name em círculo colorido
+- Cor do background: baseada no hash do nome
+- Texto: branco, bold, fontSize proporcional ao size
+- Border: 2px branca (se background escuro)
+Badge Component:
+javascript// Props:
+- count: number
+- max: number (default: 99, mostra "99+")
+- color: string (default: error)
+- size: 'small' | 'medium' (16/20px)
+- position: 'top-right' | 'top-left' | 'inline'
+
+// Estilo:
+- Círculo (se count < 10) ou oval
+- Background: color prop
+- Texto: branco, bold, small
+- Position absolute quando não inline
+SearchBar Component:
+javascript// Props:
+- value: string
+- onChangeText: function
+- placeholder: string
+- onClear: function
+- autoFocus: boolean
+
+// Features:
+- Ícone de lupa à esquerda
+- Input no centro
+- Botão X à direita (aparece quando tem texto)
+- Background: backgroundCard
+- Border radius: full
+- Height: 40px
+- Debounce: 300ms
+BottomSheet Component:
+javascript// Props:
+- visible: boolean
+- onClose: function
+- children: ReactNode
+- snapPoints: array (ex: ['25%', '50%', '90%'])
+- initialSnapIndex: number
+
+// Comportamento:
+- Desliza de baixo para cima
+- Backdrop escuro e tocável para fechar
+- Handle (barra) no topo para arrastar
+- Snap em pontos definidos
+- Swipe down para fechar
+- Animação suave (spring)
+SEÇÃO: PROFISSIONAIS PARCEIROS
+Tela/Seção Principal:
+javascriptconst professionalsScreen = {
+  headerTitle: "Profissionais",
+  sectionTitle: "Profissionais que Cuidam de Você",
+  sectionSubtitle: "Conectamos você a profissionais qualificados e especializados em saúde mental e direitos. Agende sua consulta de forma simples e rápida.",
+  
+  cards: [
+    {
+      id: 1,
+      icon: "🧠",
+      title: "Psicólogos Especializados",
+      description: "Profissionais preparados para te ouvir e acompanhar sua jornada de autoconhecimento e bem-estar emocional.",
+      buttonText: "Agendar Consulta",
+      action: "openPsychologistContact"
+    },
+    {
+      id: 2,
+      icon: "💊",
+      title: "Psiquiatras Parceiros",
+      description: "Atendimento especializado para diagnóstico, tratamento e acompanhamento medicamentoso quando necessário.",
+      buttonText: "Agendar Consulta",
+      action: "openPsychiatristContact"
+    },
+    {
+      id: 3,
+      icon: "⚖️",
+      title: "Advocacia Especializada",
+      description: "Apoio jurídico em casos relacionados à saúde mental, direitos trabalhistas e previdenciários.",
+      buttonText: "Solicitar Atendimento",
+      action: "openLawyerContact"
+    }
+  ],
+  
+  ctaSection: {
+    title: "Como Agendar?",
+    description: "É simples! Entre em contato conosco pelo WhatsApp ou Chat e nossa equipe agendará sua consulta com o profissional mais adequado para você.",
+    buttons: [
+      {
+        text: "📱 Agendar pelo WhatsApp",
+        action: "openWhatsApp",
+        variant: "primary"
+      },
+      {
+        text: "💬 Conversar no Chat",
+        action: "openChat",
+        variant: "secondary"
+      }
+    ]
+  }
+};
+
+SEÇÃO: ESPAÇO DE ESCUTA
+Tela/Seção Principal:
+javascriptconst listeningSpaceScreen = {
+  headerTitle: "Espaço de Escuta",
+  mainTitle: "💙 Espaço de Escuta",
+  subtitle: "Um momento para você ser ouvido",
+  
+  description: "Criamos um ambiente seguro onde você pode falar livremente sobre o que está sentindo. Nossa equipe está pronta para oferecer escuta ativa, acolhimento e orientação sobre os recursos disponíveis.",
+  
+  disclaimer: "⚠️ Este não é um serviço de aconselhamento profissional ou terapia. Para atendimento psicológico ou psiquiátrico, consulte nossos Profissionais Parceiros.",
+  
+  benefitsSection: {
+    title: "✨ Benefícios Especiais",
+    cards: [
+      {
+        id: 1,
+        icon: "📱",
+        title: "Usuário do App?",
+        description: "Você tem 60 minutos gratuitos!",
+        highlighted: true
+      },
+      {
+        id: 2,
+        icon: "🤝",
+        title: "Paciente de Profissional Parceiro?",
+        description: "Você tem 120 minutos gratuitos!",
+        highlighted: true
+      },
+      {
+        id: 3,
+        icon: "💼",
+        title: "Novo por aqui?",
+        description: "Consulte-nos para informações e valores",
+        highlighted: false
+      }
+    ]
+  },
+  
+  featuresSection: {
+    title: "O que você recebe:",
+    items: [
+      "✓ Escuta ativa e sem julgamentos",
+      "✓ Acolhimento qualificado",
+      "✓ Orientações sobre recursos disponíveis",
+      "✓ Total sigilo e confidencialidade"
+    ]
+  },
+  
+  mainCTA: {
+    text: "Solicitar Acolhimento",
+    action: "openListeningSpaceContact",
+    variant: "primary",
+    size: "large"
+  },
+  
+  secondaryCTA: {
+    text: "Dúvidas? Fale conosco:",
+    buttons: [
+      { icon: "logo-whatsapp", action: "openWhatsApp" },
+      { icon: "chatbubbles", action: "openChat" }
+    ]
+  }
+};
+
+MODAL: COMO FUNCIONA
+javascriptconst howItWorksModal = {
+  title: "📅 Como Funciona?",
+  steps: [
+    {
+      number: "1️⃣",
+      title: "Entre em Contato",
+      description: "Envie uma mensagem pelo WhatsApp ou Chat"
+    },
+    {
+      number: "2️⃣",
+      title: "Conte sua Necessidade",
+      description: "Informe que deseja usar o Espaço de Escuta"
+    },
+    {
+      number: "3️⃣",
+      title: "Receba as Informações",
+      description: "Nossa equipe explicará como funciona e verificará seus benefícios (gratuidade)"
+    },
+    {
+      number: "4️⃣",
+      title: "Agende seu Horário",
+      description: "Escolha data e horário que funcionam para você"
+    },
+    {
+      number: "5️⃣",
+      title: "Receba Confirmação",
+      description: "Você receberá todos os detalhes do atendimento"
+    }
+  ],
+  buttonText: "Entendi, Quero Solicitar",
+  buttonAction: "closeModalAndOpenContact"
+};
+
+FAQ - PERGUNTAS FREQUENTES
+javascriptconst faqData = [
+  {
+    id: 1,
+    question: "O que é o Espaço de Escuta?",
+    answer: "É um atendimento de acolhimento onde nossa equipe oferece escuta ativa e orientações sobre recursos disponíveis. Não é terapia ou aconselhamento profissional."
+  },
+  {
+    id: 2,
+    question: "Como funciona a gratuidade?",
+    answer: "• Usuários do app: 60 minutos gratuitos\n• Pacientes de parceiros: 120 minutos gratuitos\n• Demais interessados: consulte valores pelo WhatsApp"
+  },
+  {
+    id: 3,
+    question: "O atendimento é online?",
+    answer: "Sim, todos os atendimentos são realizados de forma remota, por chamada de vídeo, telefone ou chat."
+  },
+  {
+    id: 4,
+    question: "Meus dados são confidenciais?",
+    answer: "Absolutamente. Garantimos total sigilo das informações compartilhadas durante o atendimento."
+  },
+  {
+    id: 5,
+    question: "Qual a diferença para atendimento com psicólogo?",
+    answer: "O Espaço de Escuta oferece acolhimento e orientação, mas não substitui atendimento psicológico. Para terapia, consulte nossos Profissionais Parceiros."
+  },
+  {
+    id: 6,
+    question: "Como agendar meu horário?",
+    answer: "Entre em contato pelo WhatsApp ou Chat, informe que deseja o Espaço de Escuta e nossa equipe agendará o melhor horário para você."
+  },
+  {
+    id: 7,
+    question: "Posso usar mais de uma vez?",
+    answer: "Sim! Após usar seus minutos gratuitos, você pode agendar novos atendimentos consultando os valores com nossa equipe."
+  },
+  {
+    id: 8,
+    question: "Preciso me preparar para o atendimento?",
+    answer: "Não é necessário preparação. Apenas reserve um momento tranquilo onde você se sinta confortável para conversar."
+  }
+];
+
+const faqScreen = {
+  title: "❓ Perguntas Frequentes",
+  searchPlaceholder: "Buscar dúvida...",
+  emptyState: {
+    title: "Nenhuma resposta encontrada",
+    description: "Não encontramos o que você procura. Que tal entrar em contato conosco?",
+    buttonText: "Falar com Suporte"
+  },
+  moreQuestionsText: "Não encontrou sua dúvida?",
+  contactButton: "Falar com Nossa Equipe"
+};
+
+MENSAGENS DO CHAT/TELEGRAM
+javascriptconst chatMessages = {
+  // Mensagem automática inicial
+  welcomeMessage: `Olá! 👋 Bem-vindo ao Estabiliza!
+
+Como podemos te ajudar hoje?
+
+1️⃣ Agendar consulta com Psicólogo
+2️⃣ Agendar consulta com Psiquiatra  
+3️⃣ Solicitar apoio Jurídico
+4️⃣ Espaço de Escuta (Acolhimento profissional)
+5️⃣ Outras dúvidas
+
+Responda com o número da opção ou descreva como podemos te apoiar.`,
+
+  // Resposta para opção 4 (Espaço de Escuta)
+  listeningSpaceResponse: `Que bom que você quer conversar conosco! 💙
+
+O Espaço de Escuta é um momento dedicado a você, onde oferecemos acolhimento e orientação.
+
+Para agendar, preciso de algumas informações:
+
+📝 Seu nome completo:
+📱 Telefone para contato:
+📧 E-mail (opcional):
+📅 Preferência de dia/horário:
+💭 É usuário do app Estabiliza? (Sim/Não)
+💭 É paciente de algum profissional parceiro? (Sim/Não)
+
+Todas as informações são confidenciais. Estamos aqui para te acolher! 💙`,
+
+  // Confirmação de agendamento
+  confirmationMessage: (data) => `✅ Agendamento Confirmado!
+
+Seu atendimento no Espaço de Escuta está marcado para:
+
+📅 ${data.date}
+🕐 ${data.time}
+⏱️ Duração: ${data.duration} minutos
+
+Você receberá um lembrete 1 hora antes.
+
+Até lá! Se precisar de algo, estamos aqui. 💙`,
+
+  // Mensagem para profissionais
+  professionalContactResponse: (type) => {
+    const titles = {
+      psychologist: "Psicólogo",
+      psychiatrist: "Psiquiatra",
+      lawyer: "Advogado"
+    };
+    
+    return `Ótimo! Vamos agendar sua consulta com um ${titles[type]}. 
+
+Para continuar, preciso de:
+
+📝 Seu nome completo:
+📱 Telefone para contato:
+📧 E-mail (opcional):
+📅 Preferência de dia/horário:
+💭 Deseja nos contar brevemente o motivo? (opcional, mas ajuda a direcionar melhor)
+
+Fique tranquilo(a), todas as informações são confidenciais. Estamos aqui para te ajudar! 💙`;
+  },
+
+  // Estados de envio
+  sendingMessage: "Enviando...",
+  sentMessage: "Enviado ✓",
+  readMessage: "Lido ✓✓",
+  errorMessage: "Não foi possível enviar. Toque para tentar novamente",
+  offlineMessage: "Você está offline. A mensagem será enviada quando conectar.",
+  
+  // Mensagens de erro amigáveis
+  errors: {
+    noInternet: "Você está offline 📡. Verifique sua conexão e tente novamente.",
+    timeout: "A operação demorou muito ⏱️. Tente novamente.",
+    generic: "Algo deu errado 😕. Não se preocupe, estamos trabalhando nisso.",
+    telegramSetup: "Para receber respostas, envie uma mensagem para @estabiliza_suport_bot no Telegram primeiro.",
+    rateLimited: "Você enviou muitas mensagens. Aguarde um momento e tente novamente.",
+  },
+  
+  // Feedback de ações
+  messageCopied: "Mensagem copiada!",
+  imageAttached: "Imagem anexada com sucesso",
+  voiceRecording: "Gravando áudio...",
+  typing: "digitando..."
+};
+
+TEXTOS DE LEMBRETES E NOTIFICAÇÕES
+javascriptconst reminders = {
+  // Títulos de notificações
+  medicineTitle: "💊 Hora do seu remédio!",
+  appointmentTitle: "👨‍⚕️ Consulta agendada",
+  habitTitle: "✨ Lembrete de hábito",
+  moodTitle: "😊 Como você está hoje?",
+  
+  // Corpo das notificações
+  medicineBody: (name) => `Não esqueça de tomar ${name}`,
+  appointmentBody: (name, time) => `${name} às ${time} - Prepare-se com antecedência!`,
+  habitBody: (name) => `Hora de ${name}`,
+  moodBody: "Reserve um momento para registrar seu humor",
+  
+  // Textos da tela de lembretes
+  screen: {
+    title: "Meus Lembretes",
+    addButton: "Adicionar Lembrete",
+    emptyTitle: "Você ainda não tem lembretes",
+    emptyDescription: "Que tal criar um agora para não esquecer coisas importantes?",
+    emptyButton: "Criar Primeiro Lembrete",
+    
+    filterAll: "Todos",
+    filterMedicine: "Remédios",
+    filterAppointment: "Consultas",
+    filterHabit: "Hábitos",
+    
+    deleteConfirmTitle: "Excluir Lembrete?",
+    deleteConfirmMessage: "Tem certeza que deseja excluir este lembrete? Essa ação não pode ser desfeita.",
+    deleteCancel: "Cancelar",
+    deleteConfirm: "Excluir",
+    
+    deleteSuccess: "Lembrete excluído",
+    undoButton: "Desfazer",
+    
+    editTitle: "Editar Lembrete",
+    createTitle: "Novo Lembrete",
+    
+    nameLabel: "Nome do lembrete",
+    namePlaceholder: "Ex: Tomar vitamina D",
+    dateLabel: "Data",
+    timeLabel: "Horário",
+    typeLabel: "Tipo",
+    notesLabel: "Observações (opcional)",
+    notesPlaceholder: "Adicione informações extras...",
+    
+    saveButton: "Salvar Lembrete",
+    cancelButton: "Cancelar",
+    
+    saveSuccess: "Lembrete salvo com sucesso! 🎉",
+    saveError: "Erro ao salvar lembrete. Tente novamente.",
+    
+    permissionTitle: "Permissão Necessária",
+    permissionMessage: "Para receber lembretes, precisamos de permissão para enviar notificações. Quer ativar agora?",
+    permissionActivate: "Ativar Notificações",
+    permissionLater: "Agora Não",
+  },
+  
+  // Validações
+  validation: {
+    nameRequired: "O nome do lembrete é obrigatório",
+    nameTooShort: "O nome deve ter pelo menos 3 caracteres",
+    nameTooLong: "O nome deve ter no máximo 100 caracteres",
+    dateRequired: "Selecione uma data",
+    datePast: "A data não pode ser no passado",
+    timeRequired: "Selecione um horário",
+    typeRequired: "Selecione o tipo do lembrete",
+  }
+};
+
+TEXTOS DE HUMOR/MOOD
+javascriptconst mood = {
+  screen: {
+    title: "Meu Humor",
+    subtitle: "Como você está se sentindo?",
+    selectMood: "Selecione seu humor",
+    selectPeriod: "Período do dia",
+    addNotes: "Adicionar observações (opcional)",
+    notesPlaceholder: "O que aconteceu hoje? Como você se sente?",
+    saveButton: "Registrar Humor",
+    
+    historyTitle: "Histórico",
+    statsTitle: "Estatísticas",
+    
+    emptyTitle: "Nenhum registro ainda",
+    emptyDescription: "Comece a registrar como você se sente todos os dias!",
+    emptyButton: "Registrar Agora",
+    
+    saveSuccess: "Humor registrado! 💙",
+    saveError: "Erro ao salvar. Tente novamente.",
+    
+    deleteConfirm: "Deseja excluir este registro?",
+    deleteSuccess: "Registro excluído",
+  },
+  
+  moods: [
+    { id: 1, emoji: "😄", label: "Muito Feliz", value: 5, color: "#50C878" }
+{ id: 2, emoji: "🙂", label: "Feliz", value: 4, color: "#6BCB77" },
+{ id: 3, emoji: "😐", label: "Neutro", value: 3, color: "#FFD93D" },
+{ id: 4, emoji: "😔", label: "Triste", value: 2, color: "#FF9F40" },
+{ id: 5, emoji: "😢", label: "Muito Triste", value: 1, color: "#FF6B6B" }
+],
+periods: [
+{ id: 1, label: "Manhã", value: "morning", icon: "sunny" },
+{ id: 2, label: "Tarde", value: "afternoon", icon: "partly-sunny" },
+{ id: 3, label: "Noite", value: "night", icon: "moon" }
+],
+validation: {
+moodRequired: "Selecione um humor",
+periodRequired: "Selecione um período do dia",
+dateFuture: "A data não pode ser no futuro",
+},
+stats: {
+averageTitle: "Humor Médio",
+mostCommonTitle: "Humor Mais Frequente",
+streakTitle: "Dias Consecutivos",
+totalTitle: "Total de Registros",
+thisWeek: "Esta Semana",
+thisMonth: "Este Mês",
+allTime: "Todo o Período",
+}
+};
+
+---
+
+### **TEXTOS DE HÁBITOS**
+```javascript
+const habits = {
+  screen: {
+    title: "Meus Hábitos",
+    subtitle: "Construa uma rotina saudável",
+    todayTitle: "Hábitos de Hoje",
+    completedCount: (completed, total) => `${completed} de ${total} completados`,
+    
+    addButton: "Adicionar Hábito",
+    
+    emptyTitle: "Você ainda não tem hábitos",
+    emptyDescription: "Criar hábitos saudáveis é o primeiro passo para o bem-estar!",
+    emptyButton: "Criar Primeiro Hábito",
+    
+    completed: "Concluído!",
+    pending: "Pendente",
+    
+    deleteConfirmTitle: "Excluir Hábito?",
+    deleteConfirmMessage: "Tem certeza que deseja excluir este hábito? Seu histórico será mantido.",
+    deleteCancel: "Cancelar",
+    deleteConfirm: "Excluir",
+    
+    deleteSuccess: "Hábito excluído",
+    undoButton: "Desfazer",
+    
+    completeSuccess: (name) => `Parabéns! Você completou: ${name} 🎉`,
+    uncompleteSuccess: "Marcado como pendente",
+  },
+  
+  form: {
+    createTitle: "Novo Hábito",
+    editTitle: "Editar Hábito",
+    
+    nameLabel: "Nome do hábito",
+    namePlaceholder: "Ex: Meditar por 10 minutos",
+    
+    iconLabel: "Ícone (opcional)",
+    iconPlaceholder: "Escolha um emoji",
+    
+    messageLabel: "Mensagem de incentivo",
+    messagePlaceholder: "Ex: Você está no caminho certo!",
+    
+    frequencyLabel: "Frequência",
+    daily: "Diariamente",
+    weekly: "Semanalmente",
+    custom: "Personalizado",
+    
+    reminderLabel: "Lembrar-me às",
+    reminderToggle: "Ativar lembrete",
+    
+    saveButton: "Salvar Hábito",
+    cancelButton: "Cancelar",
+    
+    saveSuccess: "Hábito criado com sucesso! 🎉",
+    updateSuccess: "Hábito atualizado!",
+    saveError: "Erro ao salvar hábito. Tente novamente.",
+  },
+  
+  validation: {
+    nameRequired: "O nome do hábito é obrigatório",
+    nameTooShort: "O nome deve ter pelo menos 3 caracteres",
+    nameTooLong: "O nome deve ter no máximo 100 caracteres",
+  },
+  
+  stats: {
+    title: "Estatísticas",
+    completionRate: "Taxa de Conclusão",
+    currentStreak: "Sequência Atual",
+    longestStreak: "Melhor Sequência",
+    totalCompleted: "Total Completado",
+    daysLabel: (days) => `${days} ${days === 1 ? 'dia' : 'dias'}`,
+    timesLabel: (times) => `${times} ${times === 1 ? 'vez' : 'vezes'}`,
+  }
+};
+
+TEXTOS DE PERFIL E CONFIGURAÇÕES
+javascriptconst profile = {
+  screen: {
+    title: "Perfil",
+    editButton: "Editar Perfil",
+    
+    sections: {
+      account: "Conta",
+      preferences: "Preferências",
+      about: "Sobre",
+      support: "Suporte",
+    },
+    
+    accountItems: [
+      { id: 1, label: "Nome", icon: "person", action: "editName" },
+      { id: 2, label: "Avatar", icon: "image", action: "editAvatar" },
+      { id: 3, label: "E-mail", icon: "mail", action: "editEmail" },
+    ],
+    
+    preferencesItems: [
+      { id: 1, label: "Tema", icon: "color-palette", value: "auto", action: "changeTheme" },
+      { id: 2, label: "Notificações", icon: "notifications", toggle: true, action: "toggleNotifications" },
+      { id: 3, label: "Horário Silencioso", icon: "moon", action: "setQuietHours" },
+      { id: 4, label: "Idioma", icon: "language", value: "Português", action: "changeLanguage" },
+    ],
+    
+    aboutItems: [
+      { id: 1, label: "Versão do App", icon: "information-circle", value: "1.0.0" },
+      { id: 2, label: "Termos de Uso", icon: "document-text", action: "openTerms" },
+      { id: 3, label: "Política de Privacidade", icon: "shield-checkmark", action: "openPrivacy" },
+    ],
+    
+    supportItems: [
+      { id: 1, label: "Central de Ajuda", icon: "help-circle", action: "openHelp" },
+      { id: 2, label: "Falar com Suporte", icon: "chatbubbles", action: "openSupport" },
+      { id: 3, label: "Reportar Problema", icon: "bug", action: "reportBug" },
+      { id: 4, label: "Avaliar App", icon: "star", action: "rateApp" },
+    ],
+    
+    dangerZone: {
+      title: "Zona de Perigo",
+      clearDataButton: "Limpar Todos os Dados",
+      clearDataConfirmTitle: "Limpar Dados?",
+      clearDataConfirmMessage: "Isso apagará TODOS os seus dados: lembretes, humor, hábitos e configurações. Essa ação não pode ser desfeita!",
+      clearDataCancel: "Cancelar",
+      clearDataConfirm: "Sim, Limpar Tudo",
+      clearDataSuccess: "Dados limpos com sucesso",
+    },
+    
+    logoutButton: "Sair da Conta",
+    logoutConfirm: "Deseja realmente sair?",
+  },
+  
+  editProfile: {
+    title: "Editar Perfil",
+    nameLabel: "Nome Completo",
+    namePlaceholder: "Seu nome",
+    emailLabel: "E-mail",
+    emailPlaceholder: "seu@email.com",
+    phoneLabel: "Telefone (opcional)",
+    phonePlaceholder: "(00) 00000-0000",
+    bioLabel: "Sobre você (opcional)",
+    bioPlaceholder: "Conte um pouco sobre você...",
+    
+    saveButton: "Salvar Alterações",
+    cancelButton: "Cancelar",
+    
+    saveSuccess: "Perfil atualizado com sucesso!",
+    saveError: "Erro ao atualizar perfil. Tente novamente.",
+    
+    avatarOptions: {
+      title: "Escolher Avatar",
+      takePhoto: "Tirar Foto",
+      chooseGallery: "Escolher da Galeria",
+      removePhoto: "Remover Foto",
+      cancel: "Cancelar",
+    },
+  },
+  
+  themeOptions: {
+    title: "Escolher Tema",
+    light: "Claro",
+    dark: "Escuro",
+    auto: "Automático (Sistema)",
+  },
+  
+  notificationSettings: {
+    title: "Configurações de Notificações",
+    enableAll: "Ativar Todas",
+    
+    categories: [
+      { id: 1, label: "Lembretes", description: "Notificações de remédios e consultas", enabled: true },
+      { id: 2, label: "Hábitos", description: "Lembretes de hábitos diários", enabled: true },
+      { id: 3, label: "Humor", description: "Lembrete para registrar humor", enabled: true },
+      { id: 4, label: "Chat", description: "Novas mensagens do suporte", enabled: true },
+      { id: 5, label: "Conquistas", description: "Notificações de badges e marcos", enabled: true },
+    ],
+    
+    quietHours: {
+      title: "Horário Silencioso",
+      description: "Não receber notificações durante este período",
+      enable: "Ativar horário silencioso",
+      startTime: "Início",
+      endTime: "Fim",
+    },
+    
+    saveButton: "Salvar Preferências",
+    saveSuccess: "Preferências salvas!",
+  }
+};
+
+TEXTOS DE ONBOARDING
+javascriptconst onboarding = {
+  screens: [
+    {
+      id: 1,
+      title: "Bem-vindo ao Estabiliza",
+      description: "Seu companheiro para o cuidado com a saúde mental e bem-estar emocional.",
+      illustration: "welcome", // referência para ilustração
+      buttonText: "Começar",
+    },
+    {
+      id: 2,
+      title: "Como podemos te chamar?",
+      description: "Personalize sua experiência conosco",
+      inputLabel: "Seu nome",
+      inputPlaceholder: "Digite seu nome",
+      buttonText: "Continuar",
+      skipButton: "Pular",
+    },
+    {
+      id: 3,
+      title: "Lembretes Personalizados",
+      description: "Crie lembretes para remédios, consultas e hábitos saudáveis. Nunca mais esqueça o que é importante!",
+      illustration: "reminders",
+      buttonText: "Próximo",
+      skipButton: "Pular",
+    },
+    {
+      id: 4,
+      title: "Registre seu Humor",
+      description: "Acompanhe como você se sente ao longo do tempo e identifique padrões no seu bem-estar emocional.",
+      illustration: "mood",
+      buttonText: "Próximo",
+      skipButton: "Pular",
+    },
+    {
+      id: 5,
+      title: "Estamos Aqui por Você",
+      description: "Acesse profissionais especializados e nosso Espaço de Escuta sempre que precisar de apoio.",
+      illustration: "support",
+      buttonText: "Próximo",
+      skipButton: "Pular",
+    },
+    {
+      id: 6,
+      title: "Ative as Notificações",
+      description: "Permita que enviemos lembretes importantes para você não perder nenhum compromisso ou hábito.",
+      illustration: "notifications",
+      buttonText: "Ativar Notificações",
+      skipButton: "Fazer Depois",
+    },
+    {
+      id: 7,
+      title: "Tudo Pronto! 🎉",
+      description: "Você está pronto para começar sua jornada de autocuidado. Vamos lá!",
+      illustration: "success",
+      buttonText: "Começar a Usar",
+    }
+  ],
+  
+  permissionDenied: {
+    title: "Notificações Desativadas",
+    message: "Você pode ativar as notificações a qualquer momento nas configurações do app.",
+    buttonText: "Entendi",
+  },
+  
+  validation: {
+    nameRequired: "Por favor, digite seu nome",
+    nameTooShort: "Nome muito curto",
+  }
+};
+
+TEXTOS DE CONQUISTAS/GAMIFICAÇÃO
+javascriptconst achievements = {
+  screen: {
+    title: "Conquistas",
+    subtitle: "Celebre seus progressos!",
+    unlockedTab: "Desbloqueadas",
+    lockedTab: "Bloqueadas",
+    
+    emptyUnlocked: "Você ainda não desbloqueou nenhuma conquista",
+    emptyUnlockedDescription: "Continue usando o app e completando suas atividades!",
+    
+    progress: "Progresso",
+    unlocked: "Desbloqueada!",
+    locked: "Bloqueada",
+  },
+  
+  badges: [
+    {
+      id: 1,
+      name: "Primeiro Passo",
+      description: "Criou seu primeiro lembrete",
+      icon: "🎯",
+      color: "#FFD93D",
+      requirement: 1,
+      type: "reminder_created",
+    },
+    {
+      id: 2,
+      name: "Persistente",
+      description: "Registrou seu humor por 7 dias consecutivos",
+      icon: "🔥",
+      color: "#FF9F40",
+      requirement: 7,
+      type: "mood_streak",
+    },
+    {
+      id: 3,
+      name: "Dedicado",
+      description: "Usou o app por 30 dias",
+      icon: "⭐",
+      color: "#7B68EE",
+      requirement: 30,
+      type: "app_usage",
+    },
+    {
+      id: 4,
+      name: "Consistente",
+      description: "Completou 50 hábitos",
+      icon: "✅",
+      color: "#50C878",
+      requirement: 50,
+      type: "habits_completed",
+    },
+    {
+      id: 5,
+      name: "Cuidando de Mim",
+      description: "Agendou sua primeira consulta com profissional",
+      icon: "💙",
+      color: "#4A90E2",
+      requirement: 1,
+      type: "appointment_scheduled",
+    },
+    {
+      id: 6,
+      name: "Autoconhecimento",
+      description: "Registrou humor 100 vezes",
+      icon: "🧘",
+      color: "#6BCB77",
+      requirement: 100,
+      type: "mood_entries",
+    },
+    {
+      id: 7,
+      name: "Compromisso",
+      description: "Manteve todos os hábitos por 30 dias",
+      icon: "🏆",
+      color: "#FFD700",
+      requirement: 30,
+      type: "perfect_month",
+    },
+    {
+      id: 8,
+      name: "Buscando Apoio",
+      description: "Usou o Espaço de Escuta pela primeira vez",
+      icon: "🤝",
+      color: "#9B59B6",
+      requirement: 1,
+      type: "listening_space_used",
+    },
+  ],
+  
+  unlockModal: {
+    title: "🎉 Conquista Desbloqueada!",
+    message: (badgeName) => `Parabéns! Você conquistou: ${badgeName}`,
+    buttonText: "Continuar",
+    shareButton: "Compartilhar",
+  }
+};
+
+TEXTOS DE ERRO E FEEDBACK GERAL
+javascriptconst feedback = {
+  toasts: {
+    // Sucesso
+    saveSuccess: "Salvo com sucesso! ✓",
+    updateSuccess: "Atualizado com sucesso! ✓",
+    deleteSuccess: "Excluído com sucesso! ✓",
+    sendSuccess: "Enviado com sucesso! ✓",
+    copySuccess: "Copiado para área de transferência! ✓",
+    
+    // Erros
+    saveError: "Erro ao salvar. Tente novamente.",
+    updateError: "Erro ao atualizar. Tente novamente.",
+    deleteError: "Erro ao excluir. Tente novamente.",
+    sendError: "Erro ao enviar. Tente novamente.",
+    loadError: "Erro ao carregar dados. Tente novamente.",
+    
+    // Network
+    noInternet: "Você está offline 📡",
+    internetRestored: "Conexão restaurada! ✓",
+    syncingData: "Sincronizando dados...",
+    syncSuccess: "Dados sincronizados! ✓",
+    
+    // Permissões
+    permissionDenied: "Permissão necessária para continuar",
+    cameraPermissionDenied: "Permissão de câmera negada",
+    notificationPermissionDenied: "Permissão de notificações negada",
+    
+    // Validação
+    fillRequiredFields: "Preencha todos os campos obrigatórios",
+    invalidEmail: "E-mail inválido",
+    invalidPhone: "Telefone inválido",
+    invalidDate: "Data inválida",
+    
+    // Limites
+    characterLimitReached: "Limite de caracteres atingido",
+    maxFileSizeExceeded: "Arquivo muito grande (máx: 5MB)",
+    
+    // Ações
+    undoAvailable: "Deseja desfazer?",
+    changesNotSaved: "Alterações não salvas",
+  },
+  
+  alerts: {
+    error: {
+      title: "Ops! Algo deu errado",
+      genericMessage: "Ocorreu um erro inesperado. Tente novamente.",
+      buttonText: "OK",
+    },
+    
+    success: {
+      title: "Sucesso!",
+      buttonText: "OK",
+    },
+    
+    confirm: {
+      title: "Confirmar Ação",
+      cancel: "Cancelar",
+      confirm: "Confirmar",
+    },
+    
+    warning: {
+      title: "Atenção",
+      buttonText: "Entendi",
+    },
+  },
+  
+  loading: {
+    default: "Carregando...",
+    saving: "Salvando...",
+    sending: "Enviando...",
+    deleting: "Excluindo...",
+    updating: "Atualizando...",
+    processing: "Processando...",
+    pleaseWait: "Aguarde um momento...",
+  },
+  
+  emptyStates: {
+    noData: "Nenhum dado disponível",
+    noResults: "Nenhum resultado encontrado",
+    noConnection: "Sem conexão com a internet",
+    tryAgain: "Tentar Novamente",
+    goBack: "Voltar",
+  }
+};
+
+TEXTOS DA HOME/DASHBOARD
+javascriptconst home = {
+  greeting: {
+    morning: (name) => `Bom dia, ${name}! ☀️`,
+    afternoon: (name) => `Boa tarde, ${name}! 🌤️`,
+    evening: (name) => `Boa noite, ${name}! 🌙`,
+    night: (name) => `Olá, ${name}! 🌜`,
+  },
+  
+  motivationalQuotes: [
+    "Cada pequeno passo importa 💙",
+    "Você está no caminho certo! 🌟",
+    "Cuidar de si é um ato de coragem 💪",
+    "O progresso, não a perfeição 🎯",
+    "Você é mais forte do que pensa 🦋",
+    "Hoje é um novo começo ✨",
+    "Sua saúde mental importa 💙",
+    "Celebre cada vitória, por menor que seja 🎉",
+    "Você merece cuidado e atenção 🌸",
+    "Respire. Você está fazendo o seu melhor 🧘",
+  ],
+  
+  quickActions: {
+    title: "Ações Rápidas",
+    items: [
+      { id: 1, label: "Registrar Humor", icon: "happy", color: "#FFD93D", action: "registerMood" },
+      { id: 2, label: "Novo Lembrete", icon: "add-circle", color: "#4A90E2", action: "createReminder" },
+      { id: 3, label: "Espaço de Escuta", icon: "heart", color: "#FF6B6B", action: "openListeningSpace" },
+      { id: 4, label: "Conversar", icon: "chatbubbles", color: "#7B68EE", action: "openChat" },
+    ]
+  },
+  
+  todaySummary: {
+    title: "Resumo de Hoje",
+    remindersTitle: "Lembretes",
+    habitsTitle: "Hábitos",
+    moodTitle: "Humor",
+    
+    remindersCount: (pending, total) => `${pending} de ${total} pendentes`,
+    habitsCount: (completed, total) => `${completed} de ${total} completados`,
+    moodStatus: {
+      registered: "Registrado ✓",
+      notRegistered: "Não registrado",
+    },
+    
+    viewAll: "Ver Todos",
+  },
+  
+  upcomingReminders: {
+    title: "Próximos Lembretes",
+    empty: "Nenhum lembrete próximo",
+    timePrefix: "em",
+    now: "Agora",
+    late: "Atrasado",
+  },
+  
+  weeklyProgress: {
+    title: "Progresso da Semana",
+    moodAverage: "Humor Médio",
+    habitsCompletion: "Conclusão de Hábitos",
+    remindersCompliance: "Lembretes Cumpridos",
+    viewDetails: "Ver Detalhes",
+  },
+  
+  professionalsCTA: {
+    title: "Precisa de Ajuda Profissional?",
+    description: "Conecte-se com nossos profissionais especializados",
+    buttonText: "Ver Profissionais",
+  }
+};
+
+TEXTOS DE ACESSIBILIDADE
+javascriptconst accessibility = {
+  // Labels para screen readers
+  buttons: {
+    back: "Voltar",
+    close: "Fechar",
+    menu: "Menu",
+    settings: "Configurações",
+    add: "Adicionar",
+    edit: "Editar",
+    delete: "Excluir",
+    save: "Salvar",
+    cancel: "Cancelar",
+    confirm: "Confirmar",
+    send: "Enviar",
+    search: "Buscar",
+    filter: "Filtrar",
+    sort: "Ordenar",
+    refresh: "Atualizar",
+    share: "Compartilhar",
+  },
+  
+  tabs: {
+    home: "Início, aba",
+    reminders: "Lembretes, aba",
+    mood: "Humor, aba",
+    support: "Suporte, aba",
+    profile: "Perfil, aba",
+  },
+  
+  inputs: {
+    textInput: "Campo de texto",
+    password: "Campo de senha",
+    email: "Campo de e-mail",
+    phone: "Campo de telefone",
+    date: "Seletor de data",
+    time: "Seletor de horário",
+    search: "Campo de busca",
+  },
+  
+  states: {
+    loading: "Carregando conteúdo",
+    error: "Erro ao carregar",
+    empty: "Nenhum item disponível",
+    selected: "Selecionado",
+    checked: "Marcado",
+    unchecked: "Desmarcado",
+    expanded: "Expandido",
+    collapsed: "Recolhido",
+  },
+  
+  hints: {
+    doubleTapToOpen: "Toque duas vezes para abrir",
+    swipeToDelete: "Deslize para excluir",
+    longPressForOptions: "Pressione e segure para opções",
+    pullToRefresh: "Puxe para atualizar",
+  }
+};
+
+🔧 FUNCIONALIDADES TÉCNICAS DETALHADAS
+1. GERENCIAMENTO DE ESTADO
+Implementar Context API:
+javascript// Contexts necessários:
+
+// 1. ThemeContext
+const ThemeContext = {
+  theme: 'light' | 'dark' | 'auto',
+  colors: {}, // paleta atual
+  toggleTheme: function,
+  setTheme: function,
+};
+
+// 2. UserContext
+const UserContext = {
+  user: {
+    id: string,
+    name: string,
+    email: string,
+    avatar: string,
+    phone: string,
+    createdAt: date,
+  },
+  updateUser: function,
+  clearUser: function,
+};
+
+// 3. RemindersContext
+const RemindersContext = {
+  reminders: array,
+  addReminder: function,
+  updateReminder: function,
+  deleteReminder: function,
+  getUpcoming: function,
+  getByType: function,
+};
+
+// 4. MoodContext
+const MoodContext = {
+  moods: array,
+  addMood: function,
+  deleteMood: function,
+  getStats: function,
+  getByPeriod: function,
+};
+
+// 5. HabitsContext
+const HabitsContext = {
+  habits: array,
+  addHabit: function,
+  updateHabit: function,
+  deleteHabit: function,
+  toggleComplete: function,
+  getStats: function,
+};
+
+// 6. ChatContext
+const ChatContext = {
+  messages: array,
+  sendMessage: function,
+  loadHistory: function,
+  unreadCount: number,
+  markAsRead: function,
+};
+
+// 7. AchievementsContext
+const AchievementsContext = {
+  badges: array,
+  unlockBadge: function,
+  checkProgress: function,
+  unlockedCount: number,
+};
+2. PERSISTÊNCIA DE DADOS (AsyncStorage)
+javascript// Chaves de armazenamento:
+const STORAGE_KEYS = {
+  USER_PROFILE: '@estabiliza:user_profile',
+  REMINDERS: '@estabiliza:reminders',
+  MOODS: '@estabiliza:moods',
+  HABITS: '@estabiliza:habits',
+  CHAT_HISTORY: '@estabiliza:chat_history',
+  ACHIEVEMENTS: '@estabiliza:achievements',
+  SETTINGS: '@estabiliza:settings',
+  THEME: '@estabiliza:theme',
+  ONBOARDING_COMPLETED: '@estabiliza:onboarding_completed',
+  NOTIFICATION_PREFERENCES: '@estabiliza:notification_preferences',
+};
+
+// Funções de persistência:
+- saveData(key, data): salvar dados
+- loadData(key): carregar dados
+- removeData(key): remover dados
+- clearAllData(): limpar tudo
+
+// Criptografar dados sensíveis (opcional mas recomendado):
+- usar expo-secure-store para dados sensíveis
+- criptografar antes de salvar no AsyncStorage
+3. NOTIFICAÇÕES MELHORADAS
+javascript// Configuração de canais (Android):
+const notificationChannels = [
+  {
+    id: 'reminders',
+    name: 'Lembretes',
+    importance: 'MAX',
+    sound: 'default',
+    vibrationPattern: [0, 250, 250, 250],
+  },
+  {
+    id: 'habits',
+    name: 'Hábitos',
+    importance: 'HIGH',
+    sound: 'default',
+    vibrationPattern: [0, 250, 250, 250],
+  },
+  {
+    id: 'mood',
+    name: 'Registro de Humor',
+    importance: 'DEFAULT',
+    sound: 'default',
+  },
+  {
+    id: 'chat',
+    name: 'Mensagens',
+    importance: 'HIGH',
+    sound: 'default',
+  },
+  {
+    id: 'achievements',
+    name: 'Conquistas',
+    importance: 'LOW',
+    sound: 'default',
+  },
+];
+
+// Agendar notificação com repetição:
+scheduleRepeatingNotification({
+  id: string,
+  title: string,
+  body: string,
+  channelId: string,
+  trigger: {
+    type: 'daily' | 'weekly' | 'monthly',
+    hour: number,
+    minute: number,
+    repeats: boolean,
+  },
+  data: object,
+});
+
+// Ações nas notificações:
+notificationActions = [
+  { id: 'complete', title: 'Concluir' },
+  { id: 'snooze', title: 'Adiar 15min' },
+  { id: 'view', title: 'Ver Detalhes' },
+];
+
+// Horário silencioso:
+- verificar se está no horário silencioso antes de agendar
+- salvar preferências no AsyncStorage
+- não enviar notificações durante o período definido
+4. ANIMAÇÕES DETALHADAS
+javascript// Usar react-native-reanimated v3
+
+// 1. Fade In/Out
+const fadeAnimation = {
+  entering: FadeIn.duration(300),
+  exiting: FadeOut.duration(200),
+};
+
+// 2. Scale Button Press
+const scaleAnimation = {
+  onPressIn: () => scale.value = withSpring(0.95),
+  onPressOut: () => scale.value = withSpring(1),
+};
+
+// 3. Slide Up (BottomSheet)
+const slideAnimation = {
+  entering: SlideInDown.duration(250).easing(Easing.out(Easing.cubic)),
+  exiting: SlideOutDown.duration(200).easing(Easing.in(Easing.cubic)),
+};
+
+// 4. Skeleton Shimmer
+const shimmerAnimation = {
+  loop: true,
+  duration: 1500,
+  translateX: [-width, width],
+};
+
+// 5. Checkmark Animation
+const checkmarkAnimation = {
+  scale: [0, 1.2, 1],
+  rotate: ['0deg', '10deg', '0deg'],
+  duration: 500,
+};
+
+// 6. Confetti (conquistas)
+- usar react-native-confetti-cannon
+- trigger ao desbloquear badge
+- duração: 3 segundos
+
+// 7. Pull to Refresh
+- usar RefreshControl nativo
+- cores do tema
+- animação suaveTentar novamenteClaude ainda não tem a capacidade de executar o código que gera.MContinuar// 8. Swipe Actions (para deletar/editar)
+const swipeAnimation = {
+deleteThreshold: -75, // pixels para deletar
+editThreshold: 75,
+damping: 20,
+stiffness: 90,
+backgroundColor: {
+delete: colors.error,
+edit: colors.info,
+},
+icons: {
+delete: 'trash-outline',
+edit: 'pencil-outline',
+},
+};
+// 9. Card Press Effect
+const cardPressAnimation = {
+scale: 0.98,
+opacity: 0.9,
+duration: 100,
+};
+// 10. Tab Switch Animation
+const tabAnimation = {
+scale: { inactive: 1, active: 1.1 },
+translateY: { inactive: 0, active: -2 },
+color: { inactive: textSecondary, active: primary },
+duration: 200,
+};
+
+### **5. VALIDAÇÕES COMPLETAS**
+```javascript
+// Serviço de validação expandido:
+
+class ValidationService {
+  // Validações existentes mantidas
+  
+  // Novas validações:
+  
+  static validateName(name) {
+    if (!name || !name.trim()) {
+      return { valid: false, error: 'Nome é obrigatório' };
+    }
+    if (name.length < 2) {
+      return { valid: false, error: 'Nome muito curto' };
+    }
+    if (name.length > 100) {
+      return { valid: false, error: 'Nome muito longo (máx 100 caracteres)' };
+    }
+    if (!/^[a-zA-ZÀ-ÿ\s]+$/.test(name)) {
+      return { valid: false, error: 'Nome contém caracteres inválidos' };
+    }
+    return { valid: true };
+  }
+  
+  static validateDate(date, allowFuture = false, allowPast = true) {
+    if (!date) {
+      return { valid: false, error: 'Data é obrigatória' };
+    }
+    
+    const selectedDate = new Date(date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    if (!allowFuture && selectedDate > today) {
+      return { valid: false, error: 'Data não pode ser no futuro' };
+    }
+    
+    if (!allowPast && selectedDate < today) {
+      return { valid: false, error: 'Data não pode ser no passado' };
+    }
+    
+    return { valid: true };
+  }
+  
+  static validateTime(time) {
+    if (!time) {
+      return { valid: false, error: 'Horário é obrigatório' };
+    }
+    
+    // Aceita formatos: HH:MM ou Date object
+    if (time instanceof Date) {
+      return { valid: true };
+    }
+    
+    const timeRegex = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
+    if (!timeRegex.test(time)) {
+      return { valid: false, error: 'Horário inválido (use HH:MM)' };
+    }
+    
+    return { valid: true };
+  }
+  
+  static validateTextLength(text, min = 0, max = 1000) {
+    const length = text ? text.trim().length : 0;
+    
+    if (length < min) {
+      return { valid: false, error: `Mínimo ${min} caracteres` };
+    }
+    if (length > max) {
+      return { valid: false, error: `Máximo ${max} caracteres` };
+    }
+    
+    return { valid: true, remaining: max - length };
+  }
+  
+  static validateUrl(url) {
+    if (!url) return { valid: false, error: 'URL é obrigatória' };
+    
+    try {
+      const urlObj = new URL(url);
+      return { valid: true };
+    } catch (e) {
+      return { valid: false, error: 'URL inválida' };
+    }
+  }
+  
+  static sanitizeInput(input, maxLength = 1000) {
+    if (typeof input !== 'string') return input;
+    
+    return input
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/<[^>]*>/g, '')
+      .replace(/javascript:/gi, '')
+      .replace(/on\w+\s*=/gi, '')
+      .trim()
+      .substring(0, maxLength);
+  }
+  
+  static validateFile(file, maxSize = 5 * 1024 * 1024, allowedTypes = []) {
+    if (!file) {
+      return { valid: false, error: 'Arquivo é obrigatório' };
+    }
+    
+    if (file.size > maxSize) {
+      const maxSizeMB = maxSize / (1024 * 1024);
+      return { valid: false, error: `Arquivo muito grande (máx ${maxSizeMB}MB)` };
+    }
+    
+    if (allowedTypes.length > 0 && !allowedTypes.includes(file.type)) {
+      return { valid: false, error: 'Tipo de arquivo não permitido' };
+    }
+    
+    return { valid: true };
+  }
+}
+6. SISTEMA DE BUSCA E FILTROS
+javascript// Serviço de busca:
+
+class SearchService {
+  static searchReminders(reminders, query, filters = {}) {
+    let results = [...reminders];
+    
+    // Busca por texto
+    if (query && query.trim()) {
+      const lowerQuery = query.toLowerCase();
+      results = results.filter(reminder => 
+        reminder.name.toLowerCase().includes(lowerQuery) ||
+        (reminder.notes && reminder.notes.toLowerCase().includes(lowerQuery))
+      );
+    }
+    
+    // Filtro por tipo
+    if (filters.type && filters.type !== 'all') {
+      results = results.filter(r => r.type === filters.type);
+    }
+    
+    // Filtro por data
+    if (filters.dateFrom) {
+      results = results.filter(r => new Date(r.date) >= new Date(filters.dateFrom));
+    }
+    if (filters.dateTo) {
+      results = results.filter(r => new Date(r.date) <= new Date(filters.dateTo));
+    }
+    
+    // Filtro por status
+    if (filters.status) {
+      const now = new Date();
+      if (filters.status === 'pending') {
+        results = results.filter(r => !r.completed);
+      } else if (filters.status === 'completed') {
+        results = results.filter(r => r.completed);
+      } else if (filters.status === 'overdue') {
+        results = results.filter(r => !r.completed && new Date(r.date) < now);
+      }
+    }
+    
+    return results;
+  }
+  
+  static sortReminders(reminders, sortBy = 'date', order = 'asc') {
+    const sorted = [...reminders];
+    
+    sorted.sort((a, b) => {
+      let comparison = 0;
+      
+      switch (sortBy) {
+        case 'date':
+          comparison = new Date(a.date) - new Date(b.date);
+          break;
+        case 'name':
+          comparison = a.name.localeCompare(b.name);
+          break;
+        case 'type':
+          comparison = a.type.localeCompare(b.type);
+          break;
+        case 'created':
+          comparison = new Date(a.createdAt) - new Date(b.createdAt);
+          break;
+        default:
+          comparison = 0;
+      }
+      
+      return order === 'asc' ? comparison : -comparison;
+    });
+    
+    return sorted;
+  }
+  
+  static searchMoods(moods, filters = {}) {
+    let results = [...moods];
+    
+    // Filtro por período do dia
+    if (filters.period && filters.period !== 'all') {
+      results = results.filter(m => m.period === filters.period);
+    }
+    
+    // Filtro por humor
+    if (filters.mood && filters.mood !== 'all') {
+      results = results.filter(m => m.mood === filters.mood);
+    }
+    
+    // Filtro por intervalo de datas
+    if (filters.dateFrom) {
+      results = results.filter(m => new Date(m.date) >= new Date(filters.dateFrom));
+    }
+    if (filters.dateTo) {
+      results = results.filter(m => new Date(m.date) <= new Date(filters.dateTo));
+    }
+    
+    return results;
+  }
+  
+  static searchMessages(messages, query) {
+    if (!query || !query.trim()) return messages;
+    
+    const lowerQuery = query.toLowerCase();
+    return messages.filter(msg => 
+      msg.text.toLowerCase().includes(lowerQuery)
+    );
+  }
+  
+  // Debounce para busca em tempo real
+  static debounce(func, delay = 300) {
+    let timeoutId;
+    return (...args) => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => func(...args), delay);
+    };
+  }
+}
+7. ESTATÍSTICAS E GRÁFICOS
+javascript// Serviço de estatísticas:
+
+class StatsService {
+  static getMoodStats(moods, period = 'week') {
+    const now = new Date();
+    let startDate;
+    
+    switch (period) {
+      case 'week':
+        startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        break;
+      case 'month':
+        startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        break;
+      case 'year':
+        startDate = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000);
+        break;
+      default:
+        startDate = new Date(0);
+    }
+    
+    const filteredMoods = moods.filter(m => new Date(m.date) >= startDate);
+    
+    // Humor médio
+    const average = filteredMoods.length > 0
+      ? filteredMoods.reduce((sum, m) => sum + m.value, 0) / filteredMoods.length
+      : 0;
+    
+    // Humor mais frequente
+    const moodCounts = {};
+    filteredMoods.forEach(m => {
+      moodCounts[m.mood] = (moodCounts[m.mood] || 0) + 1;
+    });
+    const mostCommon = Object.keys(moodCounts).reduce((a, b) => 
+      moodCounts[a] > moodCounts[b] ? a : b, null
+    );
+    
+    // Sequência atual
+    const streak = this.calculateMoodStreak(moods);
+    
+    // Dados para gráfico
+    const chartData = this.prepareMoodChartData(filteredMoods, period);
+    
+    return {
+      average: average.toFixed(1),
+      mostCommon,
+      streak,
+      total: filteredMoods.length,
+      chartData,
+    };
+  }
+  
+  static calculateMoodStreak(moods) {
+    if (moods.length === 0) return 0;
+    
+    const sortedMoods = moods.sort((a, b) => new Date(b.date) - new Date(a.date));
+    let streak = 0;
+    let currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    
+    for (const mood of sortedMoods) {
+      const moodDate = new Date(mood.date);
+      moodDate.setHours(0, 0, 0, 0);
+      
+      const diffDays = Math.floor((currentDate - moodDate) / (24 * 60 * 60 * 1000));
+      
+      if (diffDays === streak) {
+        streak++;
+      } else if (diffDays > streak) {
+        break;
+      }
+    }
+    
+    return streak;
+  }
+  
+  static prepareMoodChartData(moods, period) {
+    // Preparar dados para recharts
+    const data = [];
+    const now = new Date();
+    
+    if (period === 'week') {
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+        const dayMoods = moods.filter(m => {
+          const mDate = new Date(m.date);
+          return mDate.toDateString() === date.toDateString();
+        });
+        
+        const average = dayMoods.length > 0
+          ? dayMoods.reduce((sum, m) => sum + m.value, 0) / dayMoods.length
+          : null;
+        
+        data.push({
+          date: date.toLocaleDateString('pt-BR', { weekday: 'short' }),
+          value: average,
+        });
+      }
+    } else if (period === 'month') {
+      for (let i = 29; i >= 0; i--) {
+        const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
+        const dayMoods = moods.filter(m => {
+          const mDate = new Date(m.date);
+          return mDate.toDateString() === date.toDateString();
+        });
+        
+        const average = dayMoods.length > 0
+          ? dayMoods.reduce((sum, m) => sum + m.value, 0) / dayMoods.length
+          : null;
+        
+        data.push({
+          date: date.getDate().toString(),
+          value: average,
+        });
+      }
+    }
+    
+    return data;
+  }
+  
+  static getHabitsStats(habits, habitCompletions) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const todayCompletions = habitCompletions.filter(c => {
+      const cDate = new Date(c.date);
+      cDate.setHours(0, 0, 0, 0);
+      return cDate.getTime() === today.getTime();
+    });
+    
+    const completionRate = habits.length > 0
+      ? (todayCompletions.length / habits.length) * 100
+      : 0;
+    
+    const currentStreak = this.calculateHabitStreak(habits, habitCompletions);
+    const longestStreak = this.calculateLongestStreak(habits, habitCompletions);
+    const totalCompleted = habitCompletions.length;
+    
+    return {
+      completionRate: completionRate.toFixed(0),
+      currentStreak,
+      longestStreak,
+      totalCompleted,
+    };
+  }
+  
+  static calculateHabitStreak(habits, completions) {
+    // Calcular dias consecutivos completando TODOS os hábitos
+    let streak = 0;
+    let currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    
+    while (true) {
+      const dayCompletions = completions.filter(c => {
+        const cDate = new Date(c.date);
+        cDate.setHours(0, 0, 0, 0);
+        return cDate.getTime() === currentDate.getTime();
+      });
+      
+      if (dayCompletions.length === habits.length) {
+        streak++;
+        currentDate.setDate(currentDate.getDate() - 1);
+      } else {
+        break;
+      }
+    }
+    
+    return streak;
+  }
+  
+  static calculateLongestStreak(habits, completions) {
+    // Implementação similar, mas percorrendo todo o histórico
+    let maxStreak = 0;
+    let currentStreak = 0;
+    let currentDate = new Date();
+    currentDate.setHours(0, 0, 0, 0);
+    
+    // Buscar data mais antiga
+    if (completions.length === 0) return 0;
+    
+    const oldestDate = new Date(Math.min(...completions.map(c => new Date(c.date))));
+    
+    while (currentDate >= oldestDate) {
+      const dayCompletions = completions.filter(c => {
+        const cDate = new Date(c.date);
+        cDate.setHours(0, 0, 0, 0);
+        return cDate.getTime() === currentDate.getTime();
+      });
+      
+      if (dayCompletions.length === habits.length) {
+        currentStreak++;
+        maxStreak = Math.max(maxStreak, currentStreak);
+      } else {
+        currentStreak = 0;
+      }
+      
+      currentDate.setDate(currentDate.getDate() - 1);
+    }
+    
+    return maxStreak;
+  }
+  
+  static getRemindersStats(reminders) {
+    const total = reminders.length;
+    const completed = reminders.filter(r => r.completed).length;
+    const pending = total - completed;
+    
+    const now = new Date();
+    const overdue = reminders.filter(r => 
+      !r.completed && new Date(r.date) < now
+    ).length;
+    
+    const upcoming = reminders.filter(r => 
+      !r.completed && new Date(r.date) >= now
+    ).length;
+    
+    const completionRate = total > 0 ? (completed / total) * 100 : 0;
+    
+    return {
+      total,
+      completed,
+      pending,
+      overdue,
+      upcoming,
+      completionRate: completionRate.toFixed(0),
+    };
+  }
+}
+8. EXPORTAÇÃO DE DADOS
+javascript// Serviço de exportação:
+
+class ExportService {
+  static async exportMoodToCSV(moods) {
+    const header = 'Data,Horário,Humor,Valor,Período,Observações\n';
+    
+    const rows = moods.map(mood => {
+      const date = new Date(mood.date);
+      return [
+        date.toLocaleDateString('pt-BR'),
+        date.toLocaleTimeString('pt-BR'),
+        mood.mood,
+        mood.value,
+        mood.period,
+        `"${mood.notes || ''}"`,
+      ].join(',');
+    }).join('\n');
+    
+    return header + rows;
+  }
+  
+  static async exportRemindersToPDF(reminders) {
+    // Usar react-native-html-to-pdf ou similar
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>Meus Lembretes - Estabiliza</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; }
+          h1 { color: #4A90E2; }
+          table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+          th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+          th { background-color: #4A90E2; color: white; }
+          tr:nth-child(even) { background-color: #f9f9f9; }
+          .footer { margin-top: 30px; font-size: 12px; color: #666; }
+        </style>
+      </head>
+      <body>
+        <h1>Meus Lembretes</h1>
+        <p>Exportado em: ${new Date().toLocaleString('pt-BR')}</p>
+        
+        <table>
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Data</th>
+              <th>Horário</th>
+              <th>Tipo</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${reminders.map(r => `
+              <tr>
+                <td>${r.name}</td>
+                <td>${new Date(r.date).toLocaleDateString('pt-BR')}</td>
+                <td>${r.time.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</td>
+                <td>${r.type === 'medicine' ? 'Remédio' : 'Consulta'}</td>
+                <td>${r.completed ? 'Concluído' : 'Pendente'}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        
+        <div class="footer">
+          <p>Gerado pelo App Estabiliza - Seu companheiro de saúde mental</p>
+        </div>
+      </body>
+      </html>
+    `;
+    
+    return html;
+  }
+  
+  static async exportAllData() {
+    // Exportar todos os dados em JSON
+    const data = {
+      exportDate: new Date().toISOString(),
+      version: '1.0.0',
+      user: await AsyncStorage.getItem(STORAGE_KEYS.USER_PROFILE),
+      reminders: await AsyncStorage.getItem(STORAGE_KEYS.REMINDERS),
+      moods: await AsyncStorage.getItem(STORAGE_KEYS.MOODS),
+      habits: await AsyncStorage.getItem(STORAGE_KEYS.HABITS),
+      achievements: await AsyncStorage.getItem(STORAGE_KEYS.ACHIEVEMENTS),
+      settings: await AsyncStorage.getItem(STORAGE_KEYS.SETTINGS),
+    };
+    
+    return JSON.stringify(data, null, 2);
+  }
+  
+  static async shareFile(content, filename, mimeType) {
+    // Usar expo-sharing
+    try {
+      const fileUri = FileSystem.documentDirectory + filename;
+      await FileSystem.writeAsStringAsync(fileUri, content);
+      
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(fileUri, {
+          mimeType,
+          dialogTitle: 'Compartilhar arquivo',
+        });
+      } else {
+        Alert.alert('Erro', 'Compartilhamento não disponível neste dispositivo');
+      }
+    } catch (error) {
+      console.error('Erro ao compartilhar:', error);
+      Alert.alert('Erro', 'Não foi possível compartilhar o arquivo');
+    }
+  }
+}
+9. MODO OFFLINE E SINCRONIZAÇÃO
+javascript// Serviço de sincronização:
+
+class SyncService {
+  constructor() {
+    this.queue = [];
+    this.isSyncing = false;
+    this.isOnline = true;
+  }
+  
+  async initialize() {
+    // Carregar fila salva
+    const savedQueue = await AsyncStorage.getItem('@estabiliza:sync_queue');
+    if (savedQueue) {
+      this.queue = JSON.parse(savedQueue);
+    }
+    
+    // Monitorar conectividade
+    NetInfo.addEventListener(state => {
+      this.isOnline = state.isConnected;
+      
+      if (this.isOnline && this.queue.length > 0) {
+        this.processQueue();
+      }
+    });
+  }
+  
+  async addToQueue(action) {
+    this.queue.push({
+      id: Date.now() + Math.random(),
+      action,
+      timestamp: new Date().toISOString(),
+      retries: 0,
+    });
+    
+    await this.saveQueue();
+    
+    if (this.isOnline) {
+      this.processQueue();
+    }
+  }
+  
+  async processQueue() {
+    if (this.isSyncing || this.queue.length === 0) return;
+    
+    this.isSyncing = true;
+    
+    const item = this.queue[0];
+    
+    try {
+      await this.executeAction(item.action);
+      
+      // Remove da fila se sucesso
+      this.queue.shift();
+      await this.saveQueue();
+      
+      // Processar próximo item
+      if (this.queue.length > 0) {
+        setTimeout(() => {
+          this.isSyncing = false;
+          this.processQueue();
+        }, 500);
+      } else {
+        this.isSyncing = false;
+      }
+      
+    } catch (error) {
+      console.error('Erro ao sincronizar:', error);
+      
+      item.retries++;
+      
+      if (item.retries >= 3) {
+        // Remover após 3 tentativas
+        this.queue.shift();
+        Alert.alert(
+          'Erro de Sincronização',
+          'Não foi possível sincronizar alguns dados. Tente novamente mais tarde.'
+        );
+      }
+      
+      await this.saveQueue();
+      this.isSyncing = false;
+    }
+  }
+  
+  async executeAction(action) {
+    switch (action.type) {
+      case 'send_message':
+        return await telegramService.sendUserMessage(action.data.message, action.data.userData);
+      
+      case 'schedule_notification':
+        return await notificationService.scheduleNotification(action.data.reminder);
+      
+      default:
+        console.warn('Ação desconhecida:', action.type);
+    }
+  }
+  
+  async saveQueue() {
+    await AsyncStorage.setItem('@estabiliza:sync_queue', JSON.stringify(this.queue));
+  }
+  
+  getQueueSize() {
+    return this.queue.length;
+  }
+  
+  isOnlineMode() {
+    return this.isOnline;
+  }
+}
+
+const syncService = new SyncService();
+10. SISTEMA DE CONQUISTAS/BADGES
+javascript// Serviço de conquistas:
+
+class AchievementsService {
+  constructor() {
+    this.listeners = [];
+  }
+  
+  async checkAchievements(type, data) {
+    const badges = await this.loadBadges();
+    const newUnlocks = [];
+    
+    switch (type) {
+      case 'reminder_created':
+        if (!badges.find(b => b.id === 1)?.unlocked) {
+          newUnlocks.push(await this.unlockBadge(1));
+        }
+        break;
+      
+      case 'mood_registered':
+        const moodStreak = data.streak;
+        if (moodStreak >= 7 && !badges.find(b => b.id === 2)?.unlocked) {
+          newUnlocks.push(await this.unlockBadge(2));
+        }
+        if (data.totalEntries >= 100 && !badges.find(b => b.id === 6)?.unlocked) {
+          newUnlocks.push(await this.unlockBadge(6));
+        }
+        break;
+      
+      case 'habit_completed':
+        if (data.totalCompleted >= 50 && !badges.find(b => b.id === 4)?.unlocked) {
+          newUnlocks.push(await this.unlockBadge(4));
+        }
+        break;
+      
+      case 'app_usage':
+        const daysUsed = data.daysUsed;
+        if (daysUsed >= 30 && !badges.find(b => b.id === 3)?.unlocked) {
+          newUnlocks.push(await this.unlockBadge(3));
+        }
+        break;
+      
+      case 'appointment_scheduled':
+        if (!badges.find(b => b.id === 5)?.unlocked) {
+          newUnlocks.push(await this.unlockBadge(5));
+        }
+        break;
+      
+      case 'listening_space_used':
+        if (!badges.find(b => b.id === 8)?.unlocked) {
+          newUnlocks.push(await this.unlockBadge(8));
+        }
+        break;
+      
+      case 'perfect_month':
+        if (data.perfectDays >= 30 && !badges.find(b => b.id === 7)?.unlocked) {
+          newUnlocks.push(await this.unlockBadge(7));
+        }
+        break;
+    }
+    
+    // Notificar listeners sobre novas conquistas
+    newUnlocks.forEach(badge => {
+      this.notifyUnlock(badge);
+    });
+    
+    return newUnlocks;
+  }
+  
+  async unlockBadge(badgeId) {
+    const badges = await this.loadBadges();
+    const badge = badges.find(b => b.id === badgeId);
+    
+    if (badge && !badge.unlocked) {
+      badge.unlocked = true;
+      badge.unlockedAt = new Date().toISOString();
+      
+      await this.saveBadges(badges);
+      
+      return badge;
+    }
+    
+    return null;
+  }
+  
+  async loadBadges() {
+    const saved = await AsyncStorage.getItem(STORAGE_KEYS.ACHIEVEMENTS);
+    if (saved) {
+      return JSON.parse(saved);
+    }
+    
+    // Retornar badges padrão (do achievements.badges array definido anteriormente)
+    return achievements.badges.map(b => ({ ...b, unlocked: false }));
+  }
+  
+  async saveBadges(badges) {
+    await AsyncStorage.setItem(STORAGE_KEYS.ACHIEVEMENTS, JSON.stringify(badges));
+  }
+  
+  onBadgeUnlock(callback) {
+    this.listeners.push(callback);
+  }
+  
+  notifyUnlock(badge) {
+    this.listeners.forEach(callback => callback(badge));
+  }
+  
+  async getProgress() {
+    const badges = await this.loadBadges();
+    const unlocked = badges.filter(b => b.unlocked).length;
+    const total = badges.length;
+    
+    return {
+      unlocked,
+      total,
+      percentage: (unlocked / total) * 100,
+    };
+  }
+}
+
+const achievementsService = new AchievementsService();
+
+🎨 ASSETS E IMAGENS
+Estrutura de Pastas:
+/assets
+  /images
+    icon.png (1024x1024)
+    splash.png (1284x2778)
+    adaptive-icon.png (1024x1024)
+    adaptive-icon-background.png (1024x1024)
+    favicon.png (512x512)
+    
+    /illustrations
+      welcome.png
+      reminders.png
+      mood.png
+      support.png
+      notifications.png
+      success.png
+      empty-reminders.png
+      empty-mood.png
+      empty-chat.png
+      empty-habits.png
+      
+    /badges
+      badge-first-step.png
+      badge-persistent.png
+      badge-dedicated.png
+      badge-consistent.png
+      badge-caring.png
+      badge-self-knowledge.png
+      badge-commitment.png
+      badge-seeking-support.png
+Prompts para Gerar Assets (Resumo):
+Ícone Principal do App (icon.png - 1024x1024):
+Create a professional app icon for "Estabiliza" mental health app:
+- Square 1024x1024px
+- Gradient from deep blue (#4A90E2) to soft purple (#7B68EE)
+- Central symbol: abstract balance/lotus/protective hands
+- Minimalist, modern, professionalTentar novamenteClaude ainda não tem a capacidade de executar o código que gera.MContinuar
+10% margin from edges (safe area)
+No text, only symbol
+Recognizable at all sizes (20px to 1024px)
+Flat design with subtle depth
+Mental health/wellness theme
+
+Style: modern app icon, minimalist, professional, calming, iOS/Android
+Format: PNG with transparency, 1024x1024px
+
+**Splash Screen (splash.png - 1284x2778):**
+Design a splash screen for "Estabiliza" mental health app:
+
+Canvas: 1284x2778px portrait
+Background: smooth gradient blue (#4A90E2) to purple (#7B68EE)
+Center: app logo 400x400px
+Below logo: "Estabiliza" in clean white sans-serif font
+Peaceful, calming, professional mood
+Important content within center 1000x1000px safe area
+
+Style: app splash screen, calming gradient, professional, modern
+Format: PNG, 1284x2778px
+
+**Ilustração - Welcome (Onboarding):**
+Create a welcoming illustration for mental health app onboarding:
+
+Person with open arms in peaceful setting
+Soft pastel colors (blue, purple, mint)
+Friendly, hopeful, encouraging mood
+Minimalist flat illustration style
+Transparent background
+800x800px
+
+Style: friendly illustration, mental health, welcoming, modern flat design
+Format: PNG with transparency, 800x800px
+
+**Ilustração - Empty State Lembretes:**
+Design an empty state illustration:
+
+Friendly calendar or clock with gentle smile
+Pastel colors (light blue, soft purple, pale pink)
+Small floating stars or sparkles
+Encouraging and inviting mood
+Minimalist line art
+Transparent background
+400x400px
+
+Style: empty state, friendly, minimalist, mental health app, encouraging
+Format: PNG with transparency, 400x400px
+
+**Badge - Primeiro Passo:**
+Create an achievement badge icon:
+
+Circular badge with decorative frame
+Footprint or stepping stone symbol in center
+Gold/yellow color scheme (#FFD93D)
+Shiny, celebratory design with subtle gradient
+256x256px
+Transparent background
+
+Style: achievement badge, golden, celebratory, game design, modern
+Format: PNG with transparency, 256x256px
+
+---
+
+## 📱 CONFIGURAÇÃO DO APP.JSON
+```javascript
+{
+  "expo": {
+    "name": "Estabiliza",
+    "slug": "estabiliza",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#4A90E2"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.estabiliza.app",
+      "buildNumber": "1.0.0",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Este app precisa de acesso à câmera para você adicionar fotos de perfil.",
+        "NSPhotoLibraryUsageDescription": "Este app precisa de acesso às suas fotos para você adicionar fotos de perfil.",
+        "NSMicrophoneUsageDescription": "Este app precisa de acesso ao microfone para mensagens de áudio.",
+        "UIBackgroundModes": ["remote-notification"]
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#4A90E2"
+      },
+      "package": "com.estabiliza.app",
+      "versionCode": 1,
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "NOTIFICATIONS",
+        "VIBRATE",
+        "RECEIVE_BOOT_COMPLETED"
+      ],
+      "googleServicesFile": "./google-services.json"
+    },
+    "web": {
+      "favicon": "./assets/images/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/notification-icon.png",
+          "color": "#4A90E2",
+          "sounds": [
+            "./assets/sounds/notification.wav"
+          ]
+        }
+      ],
+      "expo-font"
+    ],
+    "notification": {
+      "icon": "./assets/images/notification-icon.png",
+      "color": "#4A90E2",
+      "androidMode": "default",
+      "androidCollapsedTitle": "#{unread_notifications} novas notificações"
+    }
+  }
+}
+
+🔐 PRIVACIDADE E SEGURANÇA
+Política de Privacidade (Texto Sugerido):
+javascriptconst privacyPolicy = {
+  lastUpdated: "10 de Outubro de 2025",
+  
+  sections: [
+    {
+      title: "1. Informações que Coletamos",
+      content: `Coletamos apenas as informações necessárias para fornecer nossos serviços:
+      
+- Informações de Perfil: nome, e-mail, telefone (opcional)
+- Dados de Uso: lembretes, registros de humor, hábitos
+- Dados de Comunicação: mensagens enviadas pelo chat
+- Informações Técnicas: tipo de dispositivo, versão do sistema
+
+Todos os dados são armazenados localmente no seu dispositivo e não são compartilhados com terceiros sem seu consentimento explícito.`
+    },
+    {
+      title: "2. Como Usamos suas Informações",
+      content: `Usamos suas informações para:
+
+- Fornecer e melhorar nossos serviços
+- Enviar notificações de lembretes
+- Facilitar comunicação com profissionais parceiros
+- Personalizar sua experiência no app
+- Gerar estatísticas sobre seu bem-estar
+
+Nunca vendemos ou compartilhamos seus dados pessoais com anunciantes.`
+    },
+    {
+      title: "3. Armazenamento e Segurança",
+      content: `Seus dados são armazenados:
+
+- Localmente no seu dispositivo (AsyncStorage)
+- Com criptografia para informações sensíveis
+- Backup opcional controlado por você
+- Sincronização segura via HTTPS
+
+Você pode exportar ou excluir todos os seus dados a qualquer momento nas configurações.`
+    },
+    {
+      title: "4. Compartilhamento de Dados",
+      content: `Compartilhamos informações apenas quando:
+
+- Você solicita agendamento com profissionais parceiros
+- É necessário para fornecer o serviço solicitado
+- Exigido por lei ou ordem judicial
+- Com seu consentimento explícito
+
+Profissionais parceiros seguem rigorosos códigos de ética e sigilo profissional.`
+    },
+    {
+      title: "5. Seus Direitos",
+      content: `Você tem direito a:
+
+- Acessar todos os seus dados
+- Corrigir informações incorretas
+- Exportar seus dados em formato legível
+- Excluir sua conta e todos os dados
+- Revogar consentimentos a qualquer momento
+
+Para exercer seus direitos, entre em contato pelo chat do app.`
+    },
+    {
+      title: "6. Contato",
+      content: `Para dúvidas sobre privacidade:
+
+- Chat do App: Menu > Suporte
+- WhatsApp: [número]
+- E-mail: privacidade@estabiliza.com.br
+
+Respondemos em até 48 horas úteis.`
+    }
+  ]
+};
+Termos de Uso (Texto Sugerido):
+javascriptconst termsOfService = {
+  lastUpdated: "10 de Outubro de 2025",
+  
+  sections: [
+    {
+      title: "1. Aceitação dos Termos",
+      content: `Ao usar o Estabiliza, você concorda com estes termos. Se não concordar, não use o app.
+
+Podemos atualizar estes termos periodicamente. Mudanças significativas serão notificadas.`
+    },
+    {
+      title: "2. Descrição do Serviço",
+      content: `O Estabiliza é um aplicativo de apoio ao bem-estar mental que oferece:
+
+- Gerenciamento de lembretes (medicamentos, consultas)
+- Registro de humor e hábitos
+- Conexão com profissionais especializados
+- Espaço de Escuta para acolhimento
+
+⚠️ IMPORTANTE: Este app NÃO substitui tratamento médico ou psicológico profissional. Em emergências, procure ajuda imediata pelo CVV (188) ou SAMU (192).`
+    },
+    {
+      title: "3. Uso Apropriado",
+      content: `Você concorda em:
+
+- Fornecer informações verdadeiras
+- Usar o app apenas para fins legítimos
+- Não compartilhar conteúdo ofensivo ou ilegal
+- Respeitar profissionais e equipe de suporte
+- Não tentar hackear ou comprometer o sistema
+
+Reservamos o direito de suspender contas que violem estas regras.`
+    },
+    {
+      title: "4. Serviços Pagos",
+      content: `Alguns serviços podem ser cobrados:
+
+- Consultas com profissionais parceiros
+- Espaço de Escuta (após minutos gratuitos)
+- Recursos premium (futuros)
+
+Preços serão informados claramente antes da contratação. Usuários do app e pacientes de parceiros têm benefícios especiais.`
+    },
+    {
+      title: "5. Limitação de Responsabilidade",
+      content: `O Estabiliza não se responsabiliza por:
+
+- Decisões tomadas com base nas informações do app
+- Falhas técnicas ou perda de dados (faça backups)
+- Ações de profissionais parceiros (independentes)
+- Resultados de tratamentos ou terapias
+
+O app é fornecido "como está". Use por sua conta e risco.`
+    },
+    {
+      title: "6. Propriedade Intelectual",
+      content: `Todo conteúdo do app (textos, design, código) é protegido por direitos autorais.
+
+Você pode usar o app, mas não pode:
+- Copiar, modificar ou distribuir o app
+- Fazer engenharia reversa
+- Usar para criar produtos concorrentes
+
+Seus dados pertencem a você e podem ser exportados a qualquer momento.`
+    },
+    {
+      title: "7. Cancelamento",
+      content: `Você pode parar de usar o app a qualquer momento:
+
+- Sem custos ou penalidades
+- Excluindo sua conta nas configurações
+- Todos os dados serão removidos permanentemente
+
+Serviços pagos já contratados não serão reembolsados proporcionalmente.`
+    }
+  ]
+};
+
+🚀 FLUXOS DE NAVEGAÇÃO DETALHADOS
+Fluxo 1: Primeiro Acesso (Onboarding)
+1. App inicia → Mostrar Splash Screen (2s)
+2. Verificar se onboarding foi completado
+   
+   SE NÃO:
+   → Tela 1: Bem-vindo (ilustração + título + descrição)
+      [Botão: Começar]
+   
+   → Tela 2: Input Nome
+      [Campo: "Como podemos te chamar?"]
+      [Botão: Continuar] [Botão: Pular]
+   
+   → Tela 3: Feature - Lembretes
+      [Ilustração + descrição]
+      [Botão: Próximo] [Botão: Pular]
+   
+   → Tela 4: Feature - Humor
+      [Ilustração + descrição]
+      [Botão: Próximo] [Botão: Pular]
+   
+   → Tela 5: Feature - Suporte
+      [Ilustração + descrição]
+      [Botão: Próximo] [Botão: Pular]
+   
+   → Tela 6: Permissões Notificações
+      [Ilustração + explicação]
+      [Botão: Ativar Notificações] [Botão: Fazer Depois]
+   
+   → Tela 7: Tudo Pronto
+      [Ilustração sucesso + mensagem celebratória]
+      [Botão: Começar a Usar]
+   
+   → Salvar flag onboarding_completed = true
+   → Navegar para Home
+
+   SE SIM:
+   → Navegar diretamente para Home
+Fluxo 2: Criar Lembrete
+Home → Botão "Novo Lembrete" OU Quick Action "Adicionar Lembrete"
+↓
+Modal/Tela: Criar Lembrete
+├─ Input: Nome (obrigatório, validação em tempo real)
+├─ Seletor: Tipo (Remédio / Consulta)
+├─ DatePicker: Data (não permitir passado)
+├─ TimePicker: Horário
+├─ TextArea: Observações (opcional)
+└─ [Botão: Salvar Lembrete] [Botão: Cancelar]
+
+Ao clicar "Salvar":
+1. Validar campos
+   SE inválido: mostrar erro específico abaixo do campo
+   SE válido: continuar
+2. Criar objeto reminder
+3. Agendar notificação
+4. Salvar no AsyncStorage
+5. Adicionar ao Context
+6. Mostrar Toast: "Lembrete salvo com sucesso! 🎉"
+7. Verificar conquistas (primeiro lembrete?)
+8. Fechar modal
+9. Atualizar lista de lembretes
+Fluxo 3: Registrar Humor
+Home → Quick Action "Registrar Humor" OU Tab Humor
+↓
+Tela: Registrar Humor
+├─ Título: "Como você está se sentindo?"
+├─ Grid de Moods (5 opções com emoji + label)
+│  [😄 Muito Feliz] [🙂 Feliz] [😐 Neutro] [😔 Triste] [😢 Muito Triste]
+├─ Seletor de Período (Manhã / Tarde / Noite)
+├─ TextArea: "O que aconteceu hoje?" (opcional)
+└─ [Botão: Registrar Humor]
+
+Ao clicar "Registrar":
+1. Validar mood e período selecionados
+2. Criar objeto mood com timestamp
+3. Salvar no AsyncStorage
+4. Adicionar ao Context
+5. Calcular estatísticas atualizadas
+6. Verificar conquistas (streak de 7 dias?)
+7. Mostrar Toast: "Humor registrado! 💙"
+8. Navegar para tela de estatísticas (opcional)
+   OU voltar para home
+Fluxo 4: Agendar Consulta com Profissional
+Home → Card "Profissionais Parceiros"
+↓
+Tela: Profissionais
+├─ Card: Psicólogos
+│  └─ [Botão: Agendar Consulta]
+├─ Card: Psiquiatras
+│  └─ [Botão: Agendar Consulta]
+└─ Card: Advogados
+   └─ [Botão: Solicitar Atendimento]
+
+Ao clicar em qualquer botão:
+↓
+Modal: Escolher Canal
+├─ [Botão WhatsApp: "📱 Agendar pelo WhatsApp"]
+└─ [Botão Chat: "💬 Conversar no Chat"]
+
+SE WhatsApp:
+1. Montar mensagem pré-formatada
+2. Abrir WhatsApp com LinkService
+3. Registrar ação (para conquista?)
+
+SE Chat:
+1. Abrir modal de chat
+2. Enviar mensagem automática do tipo selecionado
+3. Aguardar resposta da equipe
+Fluxo 5: Usar Espaço de Escuta
+Home → Card "Espaço de Escuta"
+↓
+Tela: Espaço de Escuta
+├─ Título: "💙 Espaço de Escuta"
+├─ Descrição completa
+├─ Cards de Benefícios (60min/120min/pago)
+├─ Lista: "O que você recebe"
+├─ [Botão Grande: "Solicitar Acolhimento"]
+└─ [Links: WhatsApp / Chat]
+
+Ao clicar "Solicitar Acolhimento":
+↓
+Modal: Escolher Canal
+[WhatsApp] [Chat]
+
+Ao escolher:
+1. Abrir canal selecionado
+2. Enviar mensagem pré-formatada para Espaço de Escuta
+3. Registrar uso (para conquista?)
+4. Aguardar resposta
+Fluxo 6: Visualizar Conquistas
+Perfil → Item "Conquistas"
+↓
+Tela: Minhas Conquistas
+├─ Tabs: [Desbloqueadas] [Bloqueadas]
+├─ Progresso geral: X/Y (Z%)
+│
+├─ Lista de Badges:
+│  Cada card mostra:
+│  ├─ Ícone (colorido se desbloqueado, cinza se bloqueado)
+│  ├─ Nome
+│  ├─ Descrição
+│  ├─ Progresso (se bloqueado): "3/7 dias"
+│  └─ Data de desbloqueio (se desbloqueado)
+
+Quando badge é desbloqueado (em qualquer tela):
+↓
+Modal Celebratório:
+├─ Animação confetti
+├─ "🎉 Conquista Desbloqueada!"
+├─ Nome e descrição do badge
+├─ Ícone grande e brilhante
+└─ [Botão: Continuar] [Botão: Compartilhar]
+
+📊 ESTRUTURA DE DADOS
+User Object:
+javascript{
+  id: "user_1728000000_abc123",
+  name: "Maria Silva",
+  email: "maria@email.com",
+  phone: "+5511999999999",
+  avatar: "file:///path/to/avatar.jpg" | null,
+  createdAt: "2025-10-10T10:00:00.000Z",
+  lastLogin: "2025-10-10T15:30:00.000Z",
+  preferences: {
+    theme: "auto" | "light" | "dark",
+    notifications: {
+      enabled: true,
+      reminders: true,
+      habits: true,
+      mood: true,
+      chat: true,
+      achievements: true,
+      quietHours: {
+        enabled: false,
+        start: "22:00",
+        end: "07:00"
+      }
+    },
+    language: "pt-BR"
+  }
+}
+Reminder Object:
+javascript{
+  id: "reminder_1728000000_xyz",
+  name: "Tomar Vitamina D",
+  type: "medicine" | "appointment" | "habit",
+  date: "2025-10-15",
+  time: Date object, // ex: new Date() with hours and minutes
+  notes: "Tomar após o café da manhã",
+  completed: false,
+  completedAt: null | "2025-10-15T08:30:00.000Z",
+  notificationId: "notification_id_123",
+  createdAt: "2025-10-10T10:00:00.000Z",
+  updatedAt: "2025-10-10T10:00:00.000Z",
+  recurring: {
+    enabled: false,
+    frequency: "daily" | "weekly" | "monthly",
+    daysOfWeek: [1, 3, 5], // domingo=0, sábado=6
+    endDate: null | "2025-12-31"
+  }
+}
+Mood Object:
+javascript{
+  id: "mood_1728000000_abc",
+  mood: "very_happy" | "happy" | "neutral" | "sad" | "very_sad",
+  value: 5 | 4 | 3 | 2 | 1,
+  emoji: "😄" | "🙂" | "😐" | "😔" | "😢",
+  period: "morning" | "afternoon" | "night",
+  date: "2025-10-10T14:30:00.000Z",
+  notes: "Tive um dia muito produtivo!",
+  createdAt: "2025-10-10T14:30:00.000Z"
+}
+Habit Object:
+javascript{
+  id: "habit_1728000000_xyz",
+  name: "Meditar por 10 minutos",
+  icon: "🧘",
+  category: "mindfulness" | "exercise" | "nutrition" | "sleep" | "other",
+  frequency: "daily" | "weekly" | "custom",
+  customDays: [1, 2, 3, 4, 5], // se custom
+  reminderTime: Date object | null,
+  reminderEnabled: true,
+  notificationId: "notification_id_456" | null,
+  motivationalMessage: "Você está no caminho certo!",
+  color: "#50C878",
+  createdAt: "2025-10-01T08:00:00.000Z",
+  completions: [
+    {
+      date: "2025-10-10",
+      completed: true,
+      completedAt: "2025-10-10T07:15:00.000Z"
+    }
+  ],
+  stats: {
+    currentStreak: 7,
+    longestStreak: 15,
+    totalCompletions: 45,
+    completionRate: 85.5
+  }
+}
+Chat Message Object:
+javascript{
+  id: "msg_1728000000_abc",
+  text: "Olá, preciso de ajuda",
+  isUser: true,
+  userName: "Maria Silva",
+  timestamp: "2025-10-10T15:45:00.000Z",
+  status: "sending" | "sent" | "read" | "error",
+  telegramMessageId: 12345 | null,
+  type: "text" | "image" | "system",
+  metadata: {
+    retries: 0,
+    errorMessage: null
+  }
+}
+Achievement/Badge Object:
+javascript{
+  id: 1,
+  name: "Primeiro Passo",
+  description: "Criou seu primeiro lembrete",
+  icon: "🎯",
+  color: "#FFD93D",
+  requirement: 1,
+  type: "reminder_created",
+  unlocked: false,
+  unlockedAt: null | "2025-10-10T10:30:00.000Z",
+  progress: {
+    current: 0,
+    total: 1,
+    percentage: 0
+  }
+}
+
+🧪 TESTES E QUALIDADE
+Checklist de Testes Manuais:
+Funcionalidades Essenciais:
+
+ Criar lembrete com notificação
+ Editar lembrete existente
+ Deletar lembrete (com confirmação)
+ Receber notificação no horário correto
+ Marcar lembrete como concluído
+ Registrar humor (todos os períodos)
+ Visualizar estatísticas de humor
+ Criar e completar hábitos
+ Visualizar streak de hábitos
+ Enviar mensagem pelo chat
+ Receber resposta no chat
+ Acessar profissionais parceiros
+ Solicitar Espaço de Escuta
+ Desbloquear conquistas
+ Alternar tema (claro/escuro)
+ Editar perfil com avatar
+ Configurar notificações
+ Exportar dados
+ Limpar todos os dados
+
+Testes de UX:
+
+ Onboarding fluído e claro
+ Navegação intuitiva
+ Feedback visual em todas as ações
+ Mensagens de erro compreensíveis
+ Loading states adequados
+ Empty states informativos
+ Animações suaves (não travando)
+ Swipe to delete funcional
+ Pull to refresh funcional
+ Campos com validação em tempo real
+
+Testes de Performance:
+
+ App abre em < 3 segundos
+ Listas rolam suavemente (60fps)
+ Sem memory leaks
+ Funciona offline
+ Sincroniza ao voltar online
+ Notificações chegam no horário
+ Não drena bateria excessivamente
+
+Testes de Acessibilidade:
+
+ Labels em todos os elementos interativos
+ Contraste adequado (WCAG AA)
+ Tamanhos de fonte escaláveis
+ Navegação por teclado funcional
+ Screen reader friendly
+ Áreas de toque > 44x44px
+
+Testes em Dispositivos:
+
+ iPhone (iOS 15+)
+ Android (API 29+)
+ Tablets
+ Diferentes tamanhos de tela
+ Modo paisagem (se aplicável)
+
+
+📦 DEPENDÊNCIAS DO PROJETO
+json{
+  "dependencies": {
+    "@react-navigation/native": "^6.1.9",
+    "@react-navigation/bottom-tabs": "^6.5.11",
+    "@react-native-async-storage/async-storage": "^1.21.0",
+    "@react-native-community/datetimepicker": "^7.6.1",
+    "expo": "~54.0.0",
+    "expo-notifications": "~0.31.0",
+    "expo-splash-screen": "~0.28.0",
+    "expo-status-bar": "~2.0.0",
+    "expo-font": "~13.0.0",
+    "expo-linking": "~7.0.0",
+    "expo-file-system": "~18.0.0",
+    "expo-sharing": "~13.0.0",
+    "expo-secure-store": "~14.0.0",
+    "react": "18.3.1",
+    "react-native": "0.76.5",
+    "react-native-reanimated": "~3.16.0",
+    "react-native-gesture-handler": "~2.20.0",
+    "react-native-safe-area-context": "^4.11.0",
+    "react-native-screens": "^4.0.0",
+    "@react-native-community/netinfo": "^11.3.0",
+    "recharts-native": "^0.1.0" // ou victory-native para gráficos
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.0"
+  }
+}
+
+🎯 PRIORIDADES DE IMPLEMENTAÇÃO
+FASE 1 - MVP (Mínimo Viável) - 2-3 semanas:
+
+✅ Setup do projeto e estrutura base
+✅ Sistema de temas (claro/escuro)
+✅ Componentes reutilizáveis básicos (Button, Input, Card, Toast)
+✅ Navegação completa (Bottom Tabs + Screens)
+✅ Lembretes (CRUD completo + notificações)
+✅ Registro de humor (CRUD + visualização básica)
+✅ Hábitos (CRUD + marcação de conclusão)
+✅ Chat básico (envio/recebimento via Telegram)
+✅ Persistência de dados (AsyncStorage)
+✅ Atualizar todos os textos conforme especificado
+
+FASE 2 - Melhorias UX - 1-2 semanas:
+
+✅ Onboarding para novos usuários
+✅ Animações básicas (fade, scale, slide)
+✅ Skeleton loading screens
+✅ Empty states com ilustrações
+✅ Pull to refresh em listas
+✅ Validação visual em tempo real
+✅ Feedback com Toast ao invés de Alert
+✅ Perfil do usuário com avatar
+✅ Configurações básicas
+
+FASE 3 - Features Avançadas - 2-3 semanas:
+
+✅ Sistema de busca e filtros
+✅ Estatísticas com gráficos
+✅ Sistema de conquistas/badges
+✅ Modo offline com sincronização
+✅ Swipe to delete
+✅ Exportação de dados (CSV/PDF)
+✅ Horário silencioso para notificações
+✅ Lembretes recorrentes
+
+FASE 4 - Polimento Final - 1 semana:
+
+✅ Testes extensivos
+✅ Correção de bugs
+✅ Otimização de performance
+✅ Ajustes de acessibilidade
+✅ Documentação
+✅ Preparação para lançamento
+✅ Assets finais (ícones, splash, etc)
+
+
+📞 CONTATOS E LINKS IMPORTANTES
+javascriptconst appContacts = {
+  telegram: {
+    botUsername: "@estabiliza_suport_bot",
+    botToken: "8410080667:AAGCIqSUs3tL24K0KLAG4qA22KRNbHj__6w",
+    supportMessage: "Olá, preciso de ajuda com o app Estabiliza"
+  },
+  
+  whatsapp: {
+    number: "+55119999999999", // ADICIONAR NÚMERO REAL
+    defaultMessage: "Olá! Vim pelo app Estabiliza"
+  },
+  
+  instagram: {
+    username: "@estabiliza", // ADICIONAR USERNAME REAL
+    profileUrl: "https://instagram.com/estabiliza"
+  },
+  
+  website: {
+    url: "https://estabiliza.com.br", // ADICIONAR URL REAL
+    supportUrl: "https://estabiliza.com.br/suporte",
+    privacyUrl: "https://estabiliza.com.br/privacidade",
+    termsUrl: "https://estabiliza.com.br/termos"
+  },
+  
+  email: {
+    support: "suporte@estabiliza.com.br",
+    privacy: "privacidade@estabiliza.com.br",
+    business: "contato@estabiliza.com.br"
+  },
+  
+  emergencyNumbers: {
+    cvv: "188", // Centro de Valorização da Vida
+    samu: "192",
+    policia: "190",
+    bombeiros: "193"
+  }
+};Tentar novamenteClaude ainda não tem a capacidade de executar o código que gera.MContinuar
+🎨 GUIA DE ESTILO VISUAL COMPLETO
+Cores com Códigos Hex Exatos:
+javascriptexport const Colors = {
+  // Paleta Principal
+  brand: {
+    primary: '#4A90E2',
+    primaryDark: '#3A7BC8',
+    primaryLight: '#6BA3E8',
+    secondary: '#7B68EE',
+    secondaryDark: '#6554D4',
+    secondaryLight: '#9582F2',
+  },
+  
+  // Feedback
+  feedback: {
+    success: '#50C878',
+    successDark: '#40A860',
+    successLight: '#68D68B',
+    error: '#FF6B6B',
+    errorDark: '#E85555',
+    errorLight: '#FF8585',
+    warning: '#FFD93D',
+    warningDark: '#E6C027',
+    warningLight: '#FFE256',
+    info: '#6BCB77',
+    infoDark: '#55B561',
+    infoLight: '#82D68D',
+  },
+  
+  // Neutros Light Mode
+  light: {
+    background: '#FFFFFF',
+    backgroundSecondary: '#F8F9FA',
+    backgroundTertiary: '#F1F3F5',
+    card: '#FFFFFF',
+    cardHover: '#F8F9FA',
+    border: '#DFE6E9',
+    borderLight: '#E8ECEF',
+    divider: '#E0E0E0',
+    overlay: 'rgba(0, 0, 0, 0.5)',
+    overlayLight: 'rgba(0, 0, 0, 0.3)',
+    
+    text: {
+      primary: '#2D3436',
+      secondary: '#636E72',
+      tertiary: '#B2BEC3',
+      disabled: '#DFE6E9',
+      inverse: '#FFFFFF',
+      link: '#4A90E2',
+    },
+  },
+  
+  // Neutros Dark Mode
+  dark: {
+    background: '#1E1E1E',
+    backgroundSecondary: '#2C2C2C',
+    backgroundTertiary: '#383838',
+    card: '#2C2C2C',
+    cardHover: '#353535',
+    border: '#3E3E3E',
+    borderLight: '#4A4A4A',
+    divider: '#404040',
+    overlay: 'rgba(0, 0, 0, 0.7)',
+    overlayLight: 'rgba(0, 0, 0, 0.5)',
+    
+    text: {
+      primary: '#E0E0E0',
+      secondary: '#B0B0B0',
+      tertiary: '#808080',
+      disabled: '#4A4A4A',
+      inverse: '#1E1E1E',
+      link: '#6BA3E8',
+    },
+  },
+  
+  // Cores Específicas de Features
+  features: {
+    mood: {
+      veryHappy: '#50C878',
+      happy: '#6BCB77',
+      neutral: '#FFD93D',
+      sad: '#FF9F40',
+      verySad: '#FF6B6B',
+    },
+    
+    reminder: {
+      medicine: '#4A90E2',
+      appointment: '#7B68EE',
+      habit: '#50C878',
+    },
+    
+    badge: {
+      gold: '#FFD700',
+      silver: '#C0C0C0',
+      bronze: '#CD7F32',
+    },
+  },
+  
+  // Gradientes
+  gradients: {
+    primary: ['#4A90E2', '#7B68EE'],
+    success: ['#50C878', '#6BCB77'],
+    sunset: ['#FF9F40', '#FF6B6B'],
+    ocean: ['#4A90E2', '#50C878'],
+    purple: ['#7B68EE', '#9582F2'],
+  },
+};
+Tipografia Detalhada:
+javascriptexport const Typography = {
+  fontFamily: {
+    regular: 'System', // ou 'Inter-Regular', 'Roboto-Regular'
+    medium: 'System', // ou 'Inter-Medium', 'Roboto-Medium'
+    semibold: 'System', // ou 'Inter-SemiBold', 'Roboto-Bold'
+    bold: 'System', // ou 'Inter-Bold', 'Roboto-Bold'
+  },
+  
+  fontSize: {
+    xs: 12,
+    sm: 14,
+    base: 16,
+    lg: 18,
+    xl: 20,
+    '2xl': 24,
+    '3xl': 28,
+    '4xl': 32,
+    '5xl': 40,
+  },
+  
+  lineHeight: {
+    xs: 16,
+    sm: 20,
+    base: 24,
+    lg: 28,
+    xl: 28,
+    '2xl': 32,
+    '3xl': 36,
+    '4xl': 40,
+    '5xl': 48,
+  },
+  
+  fontWeight: {
+    regular: '400',
+    medium: '500',
+    semibold: '600',
+    bold: '700',
+  },
+  
+  // Estilos predefinidos
+  styles: {
+    h1: {
+      fontSize: 32,
+      lineHeight: 40,
+      fontWeight: '700',
+      letterSpacing: -0.5,
+    },
+    h2: {
+      fontSize: 24,
+      lineHeight: 32,
+      fontWeight: '600',
+      letterSpacing: -0.3,
+    },
+    h3: {
+      fontSize: 20,
+      lineHeight: 28,
+      fontWeight: '600',
+      letterSpacing: -0.2,
+    },
+    h4: {
+      fontSize: 18,
+      lineHeight: 28,
+      fontWeight: '600',
+      letterSpacing: 0,
+    },
+    body: {
+      fontSize: 16,
+      lineHeight: 24,
+      fontWeight: '400',
+      letterSpacing: 0,
+    },
+    bodyMedium: {
+      fontSize: 16,
+      lineHeight: 24,
+      fontWeight: '500',
+      letterSpacing: 0,
+    },
+    caption: {
+      fontSize: 14,
+      lineHeight: 20,
+      fontWeight: '400',
+      letterSpacing: 0,
+    },
+    captionMedium: {
+      fontSize: 14,
+      lineHeight: 20,
+      fontWeight: '500',
+      letterSpacing: 0,
+    },
+    small: {
+      fontSize: 12,
+      lineHeight: 16,
+      fontWeight: '400',
+      letterSpacing: 0,
+    },
+    button: {
+      fontSize: 16,
+      lineHeight: 24,
+      fontWeight: '600',
+      letterSpacing: 0.5,
+    },
+    label: {
+      fontSize: 14,
+      lineHeight: 20,
+      fontWeight: '500',
+      letterSpacing: 0.3,
+    },
+  },
+};
+Espaçamentos e Layout:
+javascriptexport const Spacing = {
+  // Espaçamentos base
+  xs: 4,
+  sm: 8,
+  md: 16,
+  lg: 24,
+  xl: 32,
+  '2xl': 40,
+  '3xl': 48,
+  '4xl': 64,
+  
+  // Espaçamentos específicos
+  screenPadding: 16,
+  cardPadding: 16,
+  sectionSpacing: 24,
+  elementSpacing: 12,
+  
+  // Tamanhos de componentes
+  buttonHeight: {
+    small: 36,
+    medium: 48,
+    large: 56,
+  },
+  
+  inputHeight: {
+    small: 40,
+    medium: 48,
+    large: 56,
+  },
+  
+  iconSize: {
+    xs: 16,
+    sm: 20,
+    md: 24,
+    lg: 32,
+    xl: 48,
+  },
+  
+  avatarSize: {
+    xs: 24,
+    sm: 32,
+    md: 48,
+    lg: 64,
+    xl: 96,
+  },
+};
+Bordas e Sombras:
+javascriptexport const BorderRadius = {
+  none: 0,
+  xs: 4,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 20,
+  '2xl': 24,
+  full: 999,
+  
+  // Componentes específicos
+  button: 12,
+  card: 16,
+  input: 12,
+  modal: 20,
+  badge: 999,
+  avatar: 999,
+};
+
+export const Shadows = {
+  // iOS
+  ios: {
+    subtle: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+    },
+    small: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.12,
+      shadowRadius: 6,
+    },
+    medium: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.15,
+      shadowRadius: 8,
+    },
+    large: {
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.2,
+      shadowRadius: 16,
+    },
+  },
+  
+  // Android
+  android: {
+    subtle: { elevation: 2 },
+    small: { elevation: 4 },
+    medium: { elevation: 8 },
+    large: { elevation: 16 },
+  },
+};
+
+// Helper para aplicar sombra multiplataforma
+export const getShadow = (level = 'medium') => {
+  return Platform.select({
+    ios: Shadows.ios[level],
+    android: Shadows.android[level],
+  });
+};
+Animações:
+javascriptexport const Animations = {
+  duration: {
+    fast: 150,
+    normal: 250,
+    slow: 400,
+  },
+  
+  easing: {
+    linear: 'linear',
+    easeIn: 'ease-in',
+    easeOut: 'ease-out',
+    easeInOut: 'ease-in-out',
+    spring: 'spring',
+  },
+  
+  // Configurações para reanimated
+  spring: {
+    damping: 20,
+    stiffness: 90,
+    mass: 1,
+  },
+  
+  timing: {
+    duration: 250,
+  },
+  
+  // Animações predefinidas
+  presets: {
+    fadeIn: {
+      duration: 250,
+      easing: 'ease-out',
+      from: { opacity: 0 },
+      to: { opacity: 1 },
+    },
+    fadeOut: {
+      duration: 200,
+      easing: 'ease-in',
+      from: { opacity: 1 },
+      to: { opacity: 0 },
+    },
+    slideUp: {
+      duration: 250,
+      easing: 'ease-out',
+      from: { translateY: 50, opacity: 0 },
+      to: { translateY: 0, opacity: 1 },
+    },
+    slideDown: {
+      duration: 200,
+      easing: 'ease-in',
+      from: { translateY: 0, opacity: 1 },
+      to: { translateY: 50, opacity: 0 },
+    },
+    scaleIn: {
+      duration: 250,
+      easing: 'spring',
+      from: { scale: 0.9, opacity: 0 },
+      to: { scale: 1, opacity: 1 },
+    },
+    buttonPress: {
+      duration: 100,
+      from: { scale: 1 },
+      to: { scale: 0.95 },
+    },
+  },
+};
+
+🔔 SISTEMA DE NOTIFICAÇÕES DETALHADO
+Tipos de Notificações:
+javascriptexport const NotificationTypes = {
+  REMINDER_MEDICINE: {
+    channelId: 'reminders',
+    categoryId: 'reminder',
+    title: '💊 Hora do seu remédio!',
+    bodyTemplate: (name) => `Não esqueça de tomar ${name}`,
+    sound: 'default',
+    priority: 'high',
+    actions: [
+      { id: 'complete', title: 'Marcar como Tomado' },
+      { id: 'snooze', title: 'Lembrar em 15min' },
+    ],
+  },
+  
+  REMINDER_APPOINTMENT: {
+    channelId: 'reminders',
+    categoryId: 'reminder',
+    title: '👨‍⚕️ Consulta agendada',
+    bodyTemplate: (name, time) => `${name} às ${time} - Prepare-se!`,
+    sound: 'default',
+    priority: 'high',
+    actions: [
+      { id: 'complete', title: 'Marcar como Concluído' },
+      { id: 'view', title: 'Ver Detalhes' },
+    ],
+  },
+  
+  HABIT_REMINDER: {
+    channelId: 'habits',
+    categoryId: 'habit',
+    title: '✨ Lembrete de hábito',
+    bodyTemplate: (name) => `Hora de ${name}`,
+    sound: 'default',
+    priority: 'default',
+    actions: [
+      { id: 'complete', title: 'Concluir Hábito' },
+      { id: 'skip', title: 'Pular Hoje' },
+    ],
+  },
+  
+  MOOD_REMINDER: {
+    channelId: 'mood',
+    categoryId: 'mood',
+    title: '😊 Como você está hoje?',
+    bodyTemplate: () => 'Reserve um momento para registrar seu humor',
+    sound: 'default',
+    priority: 'low',
+    actions: [
+      { id: 'register', title: 'Registrar Agora' },
+    ],
+  },
+  
+  CHAT_MESSAGE: {
+    channelId: 'chat',
+    categoryId: 'message',
+    title: '💬 Nova mensagem',
+    bodyTemplate: (message) => message,
+    sound: 'default',
+    priority: 'high',
+    actions: [
+      { id: 'reply', title: 'Responder' },
+      { id: 'view', title: 'Ver Conversa' },
+    ],
+  },
+  
+  ACHIEVEMENT_UNLOCKED: {
+    channelId: 'achievements',
+    categoryId: 'achievement',
+    title: '🎉 Conquista Desbloqueada!',
+    bodyTemplate: (badgeName) => `Você conquistou: ${badgeName}`,
+    sound: 'default',
+    priority: 'default',
+    actions: [
+      { id: 'view', title: 'Ver Conquista' },
+    ],
+  },
+};
+Configuração de Canais (Android):
+javascriptexport const NotificationChannels = [
+  {
+    id: 'reminders',
+    name: 'Lembretes',
+    description: 'Notificações de remédios e consultas',
+    importance: Notifications.AndroidImportance.MAX,
+    sound: 'default',
+    vibrationPattern: [0, 250, 250, 250],
+    lightColor: '#4A90E2',
+    enableLights: true,
+    enableVibrate: true,
+    showBadge: true,
+  },
+  {
+    id: 'habits',
+    name: 'Hábitos',
+    description: 'Lembretes de hábitos diários',
+    importance: Notifications.AndroidImportance.HIGH,
+    sound: 'default',
+    vibrationPattern: [0, 250, 250, 250],
+    lightColor: '#50C878',
+    enableLights: true,
+    enableVibrate: true,
+    showBadge: true,
+  },
+  {
+    id: 'mood',
+    name: 'Registro de Humor',
+    description: 'Lembretes para registrar seu humor',
+    importance: Notifications.AndroidImportance.DEFAULT,
+    sound: 'default',
+    vibrationPattern: [0, 250],
+    lightColor: '#FFD93D',
+    enableLights: true,
+    enableVibrate: false,
+    showBadge: false,
+  },
+  {
+    id: 'chat',
+    name: 'Mensagens',
+    description: 'Novas mensagens do suporte',
+    importance: Notifications.AndroidImportance.HIGH,
+    sound: 'default',
+    vibrationPattern: [0, 250, 250, 250],
+    lightColor: '#7B68EE',
+    enableLights: true,
+    enableVibrate: true,
+    showBadge: true,
+  },
+  {
+    id: 'achievements',
+    name: 'Conquistas',
+    description: 'Notificações de badges desbloqueados',
+    importance: Notifications.AndroidImportance.LOW,
+    sound: 'default',
+    vibrationPattern: [0, 250],
+    lightColor: '#FFD700',
+    enableLights: true,
+    enableVibrate: false,
+    showBadge: false,
+  },
+];
+
+📚 MENSAGENS DO SISTEMA COMPLETAS
+Mensagens de Loading:
+javascriptexport const LoadingMessages = {
+  default: 'Carregando...',
+  saving: 'Salvando...',
+  sending: 'Enviando...',
+  deleting: 'Excluindo...',
+  updating: 'Atualizando...',
+  syncing: 'Sincronizando...',
+  processing: 'Processando...',
+  uploading: 'Enviando arquivo...',
+  downloading: 'Baixando...',
+  preparing: 'Preparando...',
+  please_wait: 'Por favor, aguarde...',
+  almost_done: 'Quase pronto...',
+  
+  // Contextuais
+  loading_reminders: 'Carregando lembretes...',
+  loading_moods: 'Carregando histórico de humor...',
+  loading_habits: 'Carregando hábitos...',
+  loading_messages: 'Carregando mensagens...',
+  loading_profile: 'Carregando perfil...',
+  loading_stats: 'Calculando estatísticas...',
+  generating_report: 'Gerando relatório...',
+};
+Mensagens de Erro Amigáveis:
+javascriptexport const ErrorMessages = {
+  // Rede
+  no_internet: 'Você está offline 📡. Verifique sua conexão e tente novamente.',
+  internet_restored: 'Conexão restaurada! ✓',
+  timeout: 'A operação demorou muito ⏱️. Tente novamente.',
+  server_error: 'Nossos servidores estão com problema. Tente novamente em instantes.',
+  
+  // Autenticação
+  auth_failed: 'Erro de autenticação. Reinicie o app e tente novamente.',
+  session_expired: 'Sua sessão expirou. Por favor, faça login novamente.',
+  
+  // Dados
+  load_failed: 'Não foi possível carregar os dados. Tente novamente.',
+  save_failed: 'Erro ao salvar. Suas alterações não foram perdidas.',
+  delete_failed: 'Não foi possível excluir. Tente novamente.',
+  sync_failed: 'Erro ao sincronizar. Tentaremos novamente automaticamente.',
+  
+  // Notificações
+  notification_permission_denied: 'Sem permissão para notificações. Ative nas configurações do dispositivo.',
+  notification_schedule_failed: 'Não foi possível agendar o lembrete. Verifique as permissões.',
+  
+  // Chat/Telegram
+  message_send_failed: 'Não foi possível enviar a mensagem. Tente novamente.',
+  telegram_not_configured: 'Configure o Telegram primeiro. Envie "Olá" para @estabiliza_suport_bot',
+  rate_limited: 'Você enviou muitas mensagens. Aguarde um momento.',
+  
+  // Arquivos
+  file_too_large: 'Arquivo muito grande. Tamanho máximo: 5MB.',
+  file_type_not_supported: 'Tipo de arquivo não suportado.',
+  file_upload_failed: 'Erro ao enviar arquivo. Tente novamente.',
+  
+  // Validação
+  invalid_input: 'Dados inválidos. Verifique e tente novamente.',
+  required_field: 'Este campo é obrigatório.',
+  invalid_email: 'E-mail inválido.',
+  invalid_phone: 'Telefone inválido.',
+  invalid_date: 'Data inválida.',
+  date_in_past: 'A data não pode ser no passado.',
+  date_in_future: 'A data não pode ser no futuro.',
+  
+  // Genérico
+  generic: 'Algo deu errado 😕. Tente novamente.',
+  try_again: 'Tente novamente',
+  contact_support: 'Se o problema persistir, entre em contato com o suporte.',
+};
+Mensagens de Sucesso:
+javascriptexport const SuccessMessages = {
+  // CRUD
+  saved: 'Salvo com sucesso! ✓',
+  updated: 'Atualizado com sucesso! ✓',
+  deleted: 'Excluído com sucesso! ✓',
+  created: 'Criado com sucesso! ✓',
+  
+  // Específicos
+  reminder_created: 'Lembrete criado com sucesso! 🎉',
+  reminder_updated: 'Lembrete atualizado! ✓',
+  reminder_deleted: 'Lembrete excluído! ✓',
+  reminder_completed: 'Lembrete concluído! ✓',
+  
+  mood_registered: 'Humor registrado! 💙',
+  mood_updated: 'Registro atualizado! ✓',
+  mood_deleted: 'Registro excluído! ✓',
+  
+  habit_created: 'Hábito criado! 🎯',
+  habit_completed: (name) => `Parabéns! Você completou: ${name} 🎉`,
+  habit_uncompleted: 'Desmarcado! ✓',
+  habit_deleted: 'Hábito excluído! ✓',
+  
+  message_sent: 'Mensagem enviada! ✓',
+  
+  profile_updated: 'Perfil atualizado com sucesso! ✓',
+  settings_saved: 'Configurações salvas! ✓',
+  
+  data_exported: 'Dados exportados com sucesso! ✓',
+  data_cleared: 'Todos os dados foram limpos! ✓',
+  
+  // Ações
+  copied: 'Copiado! ✓',
+  shared: 'Compartilhado! ✓',
+  notification_scheduled: 'Notificação agendada! ✓',
+  
+  // Conquistas
+  badge_unlocked: (name) => `🎉 Você desbloqueou: ${name}!`,
+};
+Mensagens de Confirmação:
+javascriptexport const ConfirmationMessages = {
+  delete_reminder: {
+    title: 'Excluir Lembrete?',
+    message: 'Tem certeza que deseja excluir este lembrete? Essa ação não pode ser desfeita.',
+    cancel: 'Cancelar',
+    confirm: 'Excluir',
+  },
+  
+  delete_mood: {
+    title: 'Excluir Registro?',
+    message: 'Deseja realmente excluir este registro de humor?',
+    cancel: 'Cancelar',
+    confirm: 'Excluir',
+  },
+  
+  delete_habit: {
+    title: 'Excluir Hábito?',
+    message: 'Tem certeza? Seu histórico será mantido, mas o hábito não aparecerá mais na lista.',
+    cancel: 'Cancelar',
+    confirm: 'Excluir',
+  },
+  
+  clear_all_data: {
+    title: 'Limpar Todos os Dados?',
+    message: 'ATENÇÃO: Isso apagará TODOS os seus dados: lembretes, humor, hábitos, mensagens e configurações. Essa ação não pode ser desfeita!',
+    cancel: 'Cancelar',
+    confirm: 'Sim, Limpar Tudo',
+  },
+  
+  logout: {
+    title: 'Sair da Conta?',
+    message: 'Deseja realmente sair? Seus dados locais serão mantidos.',
+    cancel: 'Cancelar',
+    confirm: 'Sair',
+  },
+  
+  discard_changes: {
+    title: 'Descartar Alterações?',
+    message: 'Você tem alterações não salvas. Deseja descartá-las?',
+    cancel: 'Continuar Editando',
+    confirm: 'Descartar',
+  },
+  
+  permission_required: {
+    title: 'Permissão Necessária',
+    message: 'Para continuar, precisamos da sua permissão.',
+    cancel: 'Agora Não',
+    confirm: 'Conceder Permissão',
+  },
+};
+
+🎭 ILUSTRAÇÕES E EMOJIS
+Emojis para Cada Contexto:
+javascriptexport const Emojis = {
+  // Humor
+  mood: {
+    very_happy: '😄',
+    happy: '🙂',
+    neutral: '😐',
+    sad: '😔',
+    very_sad: '😢',
+  },
+  
+  // Lembretes
+  reminder: {
+    medicine: '💊',
+    appointment: '👨‍⚕️',
+    doctor: '🩺',
+    calendar: '📅',
+    clock: '⏰',
+    bell: '🔔',
+  },
+  
+  // Hábitos
+  habit: {
+    meditation: '🧘',
+    exercise: '💪',
+    water: '💧',
+    sleep: '😴',
+    book: '📚',
+    food: '🥗',
+    walk: '🚶',
+    yoga: '🧘‍♀️',
+  },
+  
+  // Profissionais
+  professional: {
+    psychologist: '🧠',
+    psychiatrist: '💊',
+    lawyer: '⚖️',
+    support: '🤝',
+  },
+  
+  // Feedback
+  feedback: {
+    success: '✓',
+    error: '⚠️',
+    info: 'ℹ️',
+    warning: '⚠️',
+    celebration: '🎉',
+    star: '⭐',
+    heart: '💙',
+    fire: '🔥',
+    trophy: '🏆',
+  },
+  
+  // Ações
+  action: {
+    add: '➕',
+    edit: '✏️',
+    delete: '🗑️',
+    search: '🔍',
+    filter: '🔽',
+    share: '📤',
+    download: '📥',
+    upload: '📤',
+    copy: '📋',
+  },
+  
+  // Comunicação
+  communication: {
+    chat: '💬',
+    whatsapp: '📱',
+    instagram: '📷',
+    email: '📧',
+    phone: '☎️',
+    message: '✉️',
+  },
+  
+  // Misc
+  misc: {
+    sparkles: '✨',
+    rocket: '🚀',
+    sun: '☀️',
+    moon: '🌙',
+    cloud: '☁️',
+    rainbow: '🌈',
+    leaf: '🍃',
+    flower: '🌸',
+    butterfly: '🦋',
+  },
+};
+Descrição de Ilustrações Necessárias:
+javascriptexport const Illustrations = {
+  onboarding: {
+    welcome: {
+      description: 'Pessoa com braços abertos em ambiente tranquilo',
+      colors: ['#4A90E2', '#7B68EE', '#50C878'],
+      style: 'flat, moderno, acolhedor',
+      size: '800x800px',
+    },
+    reminders: {
+      description: 'Calendário com notificações flutuantes',
+      colors: ['#4A90E2', '#FFD93D'],
+      style: 'flat, organizado, tecnológico',
+      size: '800x800px',
+    },
+    mood: {
+      description: 'Diário com emojis de humor ao redor',
+      colors: ['#50C878', '#FFD93D', '#FF6B6B'],
+      style: 'flat, emocional, expressivo',
+      size: '800x800px',
+    },
+    support: {
+      description: 'Duas pessoas conversando, uma apoiando a outra',
+      colors: ['#7B68EE', '#4A90E2'],
+      style: 'flat, empático, humano',
+      size: '800x800px',
+    },
+    notifications: {
+      description: 'Smartphone com sino e ondas sonoras',
+      colors: ['#4A90E2', '#FFD93D'],
+      style: 'flat, tecnológico, alertas',
+      size: '800x800px',
+    },
+    success: {
+      description: 'Pessoa comemorando com confete',
+      colors: ['#50C878', '#FFD700'],
+      style: 'flat, celebratório, feliz',
+      size: '800x800px',
+    },
+  },
+  
+  emptyStates: {
+    no_reminders: {
+      description: 'Calendário vazio com smile gentil',
+      colors: ['#E8F4F8', '#4A90E2'],
+      style: 'minimalista, convidativo',
+      size: '400x400px',
+    },
+    no_mood: {
+      description: 'Diário fechado com coração',
+      colors: ['#F0E6FF', '#7B68EE'],
+      style: 'minimalista, tranquilo',
+      size: '400x400px',
+    },
+    no_habits: {
+      description: 'Planta germinando',
+      colors: ['#E8F8E8', '#50C878'],
+      style: 'minimalista, crescimento',
+      size: '400x400px',
+    },
+    no_messages: {
+      description: 'Balões de fala vazios formando coração',
+      colors: ['#E8F4F8', '#4A90E2'],
+      style: 'minimalista, acolhedor',
+      size: '400x400px',
+    },
+    no_achievements: {
+      description: 'Troféu com interrogaçãoTentar novamenteClaude ainda não tem a capacidade de executar o código que gera.MContinuar2 / 2javascript      description: 'Troféu com interrogação',
+      colors: ['#FFF8E1', '#FFD700'],
+      style: 'minimalista, motivador',
+      size: '400x400px',
+    },
+    no_results: {
+      description: 'Lupa encontrando nada',
+      colors: ['#F5F5F5', '#B2BEC3'],
+      style: 'minimalista, neutro',
+      size: '400x400px',
+    },
+    no_connection: {
+      description: 'Nuvem desconectada com raio',
+      colors: ['#FFE6E6', '#FF6B6B'],
+      style: 'minimalista, problema',
+      size: '400x400px',
+    },
+  },
+  
+  badges: {
+    first_step: {
+      description: 'Pegada ou pedra de caminho em círculo dourado',
+      colors: ['#FFD93D', '#FFA000'],
+      style: 'badge game, brilhante, celebratório',
+      size: '256x256px',
+    },
+    persistent: {
+      description: 'Número 7 com chama',
+      colors: ['#FF9F40', '#FF6B6B'],
+      style: 'badge game, energético, fogo',
+      size: '256x256px',
+    },
+    dedicated: {
+      description: 'Estrela ou calendário com 30',
+      colors: ['#7B68EE', '#9582F2'],
+      style: 'badge game, premium, especial',
+      size: '256x256px',
+    },
+    consistent: {
+      description: 'Checkmark com estrelas ao redor',
+      colors: ['#50C878', '#6BCB77'],
+      style: 'badge game, conquista, sucesso',
+      size: '256x256px',
+    },
+    caring: {
+      description: 'Coração com mãos',
+      colors: ['#4A90E2', '#6BA3E8'],
+      style: 'badge game, cuidado, apoio',
+      size: '256x256px',
+    },
+    self_knowledge: {
+      description: 'Pessoa meditando',
+      colors: ['#6BCB77', '#50C878'],
+      style: 'badge game, zen, autoconhecimento',
+      size: '256x256px',
+    },
+    commitment: {
+      description: 'Troféu dourado',
+      colors: ['#FFD700', '#FFA000'],
+      style: 'badge game, ouro, vitória',
+      size: '256x256px',
+    },
+    seeking_support: {
+      description: 'Duas mãos se encontrando',
+      colors: ['#9B59B6', '#8E44AD'],
+      style: 'badge game, conexão, apoio',
+      size: '256x256px',
+    },
+  },
+};
+
+🌐 INTERNACIONALIZAÇÃO (Preparação Futura)
+Estrutura para Suporte a Múltiplos Idiomas:
+javascript// i18n/pt-BR.js (Português - Padrão)
+export const pt_BR = {
+  common: {
+    ok: 'OK',
+    cancel: 'Cancelar',
+    save: 'Salvar',
+    delete: 'Excluir',
+    edit: 'Editar',
+    add: 'Adicionar',
+    search: 'Buscar',
+    filter: 'Filtrar',
+    loading: 'Carregando...',
+    error: 'Erro',
+    success: 'Sucesso',
+    close: 'Fechar',
+    back: 'Voltar',
+    next: 'Próximo',
+    skip: 'Pular',
+    done: 'Concluído',
+    retry: 'Tentar Novamente',
+    share: 'Compartilhar',
+    more: 'Mais',
+    less: 'Menos',
+  },
+  
+  tabs: {
+    home: 'Início',
+    reminders: 'Lembretes',
+    mood: 'Humor',
+    support: 'Suporte',
+    profile: 'Perfil',
+  },
+  
+  // ... todos os textos já definidos anteriormente
+};
+
+// i18n/en-US.js (Inglês - Exemplo)
+export const en_US = {
+  common: {
+    ok: 'OK',
+    cancel: 'Cancel',
+    save: 'Save',
+    delete: 'Delete',
+    edit: 'Edit',
+    add: 'Add',
+    search: 'Search',
+    filter: 'Filter',
+    loading: 'Loading...',
+    error: 'Error',
+    success: 'Success',
+    close: 'Close',
+    back: 'Back',
+    next: 'Next',
+    skip: 'Skip',
+    done: 'Done',
+    retry: 'Retry',
+    share: 'Share',
+    more: 'More',
+    less: 'Less',
+  },
+  
+  tabs: {
+    home: 'Home',
+    reminders: 'Reminders',
+    mood: 'Mood',
+    support: 'Support',
+    profile: 'Profile',
+  },
+  
+  // ... traduções
+};
+
+// i18n/es-ES.js (Espanhol - Exemplo)
+export const es_ES = {
+  common: {
+    ok: 'OK',
+    cancel: 'Cancelar',
+    save: 'Guardar',
+    delete: 'Eliminar',
+    // ... traduções
+  },
+  // ... traduções
+};
+
+📊 ANALYTICS E MÉTRICAS (Opcional)
+Eventos a Trackear:
+javascriptexport const AnalyticsEvents = {
+  // App Lifecycle
+  APP_OPENED: 'app_opened',
+  APP_CLOSED: 'app_closed',
+  ONBOARDING_STARTED: 'onboarding_started',
+  ONBOARDING_COMPLETED: 'onboarding_completed',
+  ONBOARDING_SKIPPED: 'onboarding_skipped',
+  
+  // Lembretes
+  REMINDER_CREATED: 'reminder_created',
+  REMINDER_EDITED: 'reminder_edited',
+  REMINDER_DELETED: 'reminder_deleted',
+  REMINDER_COMPLETED: 'reminder_completed',
+  REMINDER_NOTIFICATION_RECEIVED: 'reminder_notification_received',
+  REMINDER_NOTIFICATION_TAPPED: 'reminder_notification_tapped',
+  
+  // Humor
+  MOOD_REGISTERED: 'mood_registered',
+  MOOD_DELETED: 'mood_deleted',
+  MOOD_STATS_VIEWED: 'mood_stats_viewed',
+  MOOD_CHART_VIEWED: 'mood_chart_viewed',
+  
+  // Hábitos
+  HABIT_CREATED: 'habit_created',
+  HABIT_EDITED: 'habit_edited',
+  HABIT_DELETED: 'habit_deleted',
+  HABIT_COMPLETED: 'habit_completed',
+  HABIT_SKIPPED: 'habit_skipped',
+  HABIT_STATS_VIEWED: 'habit_stats_viewed',
+  
+  // Chat
+  MESSAGE_SENT: 'message_sent',
+  MESSAGE_RECEIVED: 'message_received',
+  CHAT_OPENED: 'chat_opened',
+  
+  // Profissionais
+  PROFESSIONAL_CARD_TAPPED: 'professional_card_tapped',
+  PROFESSIONAL_WHATSAPP_OPENED: 'professional_whatsapp_opened',
+  PROFESSIONAL_CHAT_OPENED: 'professional_chat_opened',
+  
+  // Espaço de Escuta
+  LISTENING_SPACE_VIEWED: 'listening_space_viewed',
+  LISTENING_SPACE_REQUESTED: 'listening_space_requested',
+  
+  // Conquistas
+  BADGE_UNLOCKED: 'badge_unlocked',
+  ACHIEVEMENTS_VIEWED: 'achievements_viewed',
+  BADGE_SHARED: 'badge_shared',
+  
+  // Configurações
+  THEME_CHANGED: 'theme_changed',
+  NOTIFICATIONS_TOGGLED: 'notifications_toggled',
+  PROFILE_EDITED: 'profile_edited',
+  DATA_EXPORTED: 'data_exported',
+  DATA_CLEARED: 'data_cleared',
+  
+  // Erros
+  ERROR_OCCURRED: 'error_occurred',
+  SYNC_FAILED: 'sync_failed',
+  NOTIFICATION_FAILED: 'notification_failed',
+};
+
+// Exemplo de uso (com Firebase Analytics ou similar)
+const trackEvent = (eventName, params = {}) => {
+  // analytics.logEvent(eventName, params);
+  console.log('[Analytics]', eventName, params);
+};
+
+🔒 DADOS SENSÍVEIS E CONFORMIDADE
+LGPD/GDPR Compliance:
+javascriptexport const PrivacyCompliance = {
+  dataCategories: {
+    personal: {
+      name: 'Dados Pessoais',
+      description: 'Nome, e-mail, telefone',
+      retention: 'Enquanto a conta estiver ativa',
+      deletable: true,
+      exportable: true,
+    },
+    health: {
+      name: 'Dados de Saúde',
+      description: 'Registros de humor, lembretes de medicamentos',
+      retention: 'Enquanto a conta estiver ativa',
+      deletable: true,
+      exportable: true,
+      encrypted: true,
+    },
+    usage: {
+      name: 'Dados de Uso',
+      description: 'Estatísticas de uso do app',
+      retention: '90 dias',
+      deletable: true,
+      exportable: true,
+    },
+    communication: {
+      name: 'Comunicações',
+      description: 'Mensagens enviadas via chat',
+      retention: '1 ano',
+      deletable: true,
+      exportable: true,
+    },
+  },
+  
+  userRights: [
+    'Acessar todos os seus dados',
+    'Corrigir dados incorretos',
+    'Exportar dados em formato legível',
+    'Excluir sua conta e todos os dados',
+    'Revogar consentimentos',
+    'Portabilidade de dados',
+  ],
+  
+  consentTypes: {
+    essential: {
+      name: 'Funcionalidades Essenciais',
+      description: 'Necessário para o funcionamento básico do app',
+      required: true,
+      canRevoke: false,
+    },
+    notifications: {
+      name: 'Notificações',
+      description: 'Receber lembretes e notificações',
+      required: false,
+      canRevoke: true,
+    },
+    analytics: {
+      name: 'Análise de Uso',
+      description: 'Ajudar a melhorar o app',
+      required: false,
+      canRevoke: true,
+    },
+    marketing: {
+      name: 'Comunicações de Marketing',
+      description: 'Receber novidades e promoções',
+      required: false,
+      canRevoke: true,
+    },
+  },
+};
+
+🚨 CONTATOS DE EMERGÊNCIA
+Números e Recursos de Apoio:
+javascriptexport const EmergencyContacts = {
+  brazil: {
+    cvv: {
+      name: 'CVV - Centro de Valorização da Vida',
+      number: '188',
+      description: 'Apoio emocional e prevenção ao suicídio',
+      available: '24h todos os dias',
+      type: 'ligação gratuita',
+    },
+    samu: {
+      name: 'SAMU',
+      number: '192',
+      description: 'Serviço de Atendimento Móvel de Urgência',
+      available: '24h todos os dias',
+      type: 'emergência médica',
+    },
+    policia: {
+      name: 'Polícia Militar',
+      number: '190',
+      description: 'Emergências policiais',
+      available: '24h todos os dias',
+      type: 'emergência',
+    },
+    bombeiros: {
+      name: 'Corpo de Bombeiros',
+      number: '193',
+      description: 'Emergências e resgates',
+      available: '24h todos os dias',
+      type: 'emergência',
+    },
+    caps: {
+      name: 'CAPS - Centro de Atenção Psicossocial',
+      description: 'Atendimento gratuito em saúde mental pelo SUS',
+      howToFind: 'Busque "CAPS" + nome da sua cidade no Google',
+      type: 'atendimento presencial',
+    },
+  },
+  
+  online: {
+    cvv_chat: {
+      name: 'CVV Chat',
+      url: 'https://www.cvv.org.br/chat/',
+      description: 'Atendimento por chat',
+      available: 'Todos os dias das 17h às 01h',
+    },
+    mapa_saude_mental: {
+      name: 'Mapa da Saúde Mental',
+      url: 'https://mapasaudemental.com.br/',
+      description: 'Encontre profissionais e serviços de saúde mental',
+    },
+  },
+};
+
+// Componente de Emergência
+const EmergencyScreen = {
+  title: '🚨 Precisa de Ajuda Urgente?',
+  subtitle: 'Se você está em crise, não está sozinho. Ligue agora:',
+  disclaimer: 'Em caso de risco imediato à vida, ligue 192 (SAMU) ou vá ao hospital mais próximo.',
+  
+  quickActions: [
+    {
+      title: 'CVV - 188',
+      subtitle: 'Apoio emocional 24h',
+      icon: '📞',
+      color: '#4A90E2',
+      action: 'call:188',
+    },
+    {
+      title: 'SAMU - 192',
+      subtitle: 'Emergência médica',
+      icon: '🚑',
+      color: '#FF6B6B',
+      action: 'call:192',
+    },
+    {
+      title: 'Chat CVV',
+      subtitle: 'Conversar online',
+      icon: '💬',
+      color: '#7B68EE',
+      action: 'openUrl:https://www.cvv.org.br/chat/',
+    },
+  ],
+};
+
+📲 DEEP LINKS E NAVEGAÇÃO
+Schema de Deep Links:
+javascriptexport const DeepLinks = {
+  scheme: 'estabiliza://',
+  
+  routes: {
+    // Telas principais
+    home: 'estabiliza://home',
+    reminders: 'estabiliza://reminders',
+    mood: 'estabiliza://mood',
+    support: 'estabiliza://support',
+    profile: 'estabiliza://profile',
+    
+    // Ações específicas
+    createReminder: 'estabiliza://reminders/create',
+    editReminder: 'estabiliza://reminders/edit/:id',
+    registerMood: 'estabiliza://mood/register',
+    openChat: 'estabiliza://support/chat',
+    viewAchievements: 'estabiliza://profile/achievements',
+    
+    // Notificações
+    reminderNotification: 'estabiliza://notification/reminder/:id',
+    habitNotification: 'estabiliza://notification/habit/:id',
+    chatNotification: 'estabiliza://notification/chat',
+    
+    // Externos
+    professionals: 'estabiliza://professionals',
+    listeningSpace: 'estabiliza://listening-space',
+    emergency: 'estabiliza://emergency',
+  },
+  
+  // Handler exemplo
+  handleDeepLink: (url) => {
+    // Parse URL e navegar
+    console.log('Deep link received:', url);
+  },
+};
+
+🎯 MÉTRICAS DE SUCESSO DO APP
+KPIs a Monitorar:
+javascriptexport const SuccessMetrics = {
+  engagement: {
+    dau: 'Daily Active Users',
+    mau: 'Monthly Active Users',
+    sessionDuration: 'Duração média de sessão',
+    sessionsPerUser: 'Sessões por usuário/mês',
+    retentionDay7: 'Retenção após 7 dias',
+    retentionDay30: 'Retenção após 30 dias',
+  },
+  
+  functionality: {
+    remindersCreated: 'Lembretes criados/usuário',
+    remindersCompleted: 'Taxa de conclusão de lembretes',
+    moodRegistrations: 'Registros de humor/usuário',
+    habitCompletions: 'Taxa de conclusão de hábitos',
+    messagesSent: 'Mensagens enviadas',
+  },
+  
+  satisfaction: {
+    appRating: 'Avaliação média na loja',
+    nps: 'Net Promoter Score',
+    crashRate: 'Taxa de crashes',
+    errorRate: 'Taxa de erros',
+  },
+  
+  growth: {
+    newUsers: 'Novos usuários/mês',
+    onboardingCompletion: 'Taxa de conclusão do onboarding',
+    referrals: 'Indicações',
+  },
+  
+  health: {
+    professionalConnections: 'Conexões com profissionais',
+    listeningSpaceUsage: 'Uso do Espaço de Escuta',
+    emergencyContactsAccessed: 'Acessos a contatos de emergência',
+  },
+};
+
+🎨 TEMAS PERSONALIZADOS (Exemplo)
+Tema Adicional - Modo Alto Contraste:
+javascriptexport const HighContrastTheme = {
+  name: 'high-contrast',
+  displayName: 'Alto Contraste',
+  
+  colors: {
+    background: '#000000',
+    backgroundSecondary: '#1A1A1A',
+    card: '#1A1A1A',
+    border: '#FFFFFF',
+    
+    text: {
+      primary: '#FFFFFF',
+      secondary: '#FFFF00', // amarelo forte
+      tertiary: '#00FFFF', // ciano
+      link: '#00FF00', // verde limão
+    },
+    
+    primary: '#00FF00',
+    secondary: '#00FFFF',
+    success: '#00FF00',
+    error: '#FF0000',
+    warning: '#FFFF00',
+    info: '#00FFFF',
+  },
+  
+  accessibility: {
+    minContrastRatio: 7.0, // WCAG AAA
+    focusIndicatorWidth: 3,
+    fontSize: {
+      multiplier: 1.2, // 20% maior que padrão
+    },
+  },
+};
+
+🔄 CICLO DE VIDA DO APP
+Fluxo Completo do Usuário:
+1. INSTALAÇÃO
+   ↓
+2. PRIMEIRO ACESSO
+   → Splash Screen (2s)
+   → Onboarding (7 telas)
+   → Solicitar permissões (notificações)
+   → Criar perfil básico (nome)
+   ↓
+3. USO REGULAR
+   → Login automático
+   → Home com resumo do dia
+   → Acesso a todas as funcionalidades
+   → Receber notificações
+   ↓
+4. ENGAJAMENTO
+   → Completar ações diárias
+   → Desbloquear conquistas
+   → Ver progresso/estatísticas
+   → Interagir com suporte
+   ↓
+5. RETENÇÃO
+   → Notificações personalizadas
+   → Novos conteúdos/features
+   → Gamificação contínua
+   → Conexão com profissionais
+   ↓
+6. ADVOCACIA (Opcional)
+   → Compartilhar conquistas
+   → Avaliar app na loja
+   → Indicar para amigos
+   ↓
+7. CHURN/PAUSA
+   → Dados preservados localmente
+   → Reengajamento via notificações
+   → Fácil retorno ao app
+   ↓
+8. EXCLUSÃO (Se usuário desejar)
+   → Confirmar ação
+   → Exportar dados antes (opcional)
+   → Remover todos os dados
+   → Desinstalar app
+
+📋 CHECKLIST FINAL ANTES DO LANÇAMENTO
+Pré-Lançamento:
+FUNCIONALIDADES:
+□ Todos os CRUDs funcionando
+□ Notificações agendando corretamente
+□ Chat enviando/recebendo mensagens
+□ Sincronização offline/online
+□ Estatísticas calculando corretamente
+□ Conquistas desbloqueando
+□ Exportação de dados funcionando
+
+DESIGN:
+□ Todas as telas implementadas
+□ Tema claro/escuro funcionando
+□ Animações suaves e sem travamentos
+□ Responsivo em diferentes tamanhos de tela
+□ Ícones e ilustrações em todos os lugares
+□ Textos revisados e sem erros
+
+ASSETS:
+□ icon.png (1024x1024)
+□ splash.png (1284x2778)
+□ adaptive-icon.png + background
+□ Todas as ilustrações necessárias
+□ Todos os badges criados
+
+TESTES:
+□ Testado em iOS e Android
+□ Testado em diferentes tamanhos de tela
+□ Testado modo offline
+□ Testado notificações
+□ Testado fluxo completo de usuário
+□ Sem crashes ou erros críticos
+□ Performance adequada (>= 60fps)
+
+CONTEÚDO:
+□ Todos os textos implementados
+□ Política de privacidade escrita
+□ Termos de uso escritos
+□ FAQ completo
+□ Contatos atualizados
+
+SEGURANÇA:
+□ Dados sensíveis encriptados
+□ Validações implementadas
+□ Rate limiting ativo
+□ Permissões solicitadas corretamente
+□ LGPD/GDPR compliance
+
+LOJA:
+□ Descrição do app escrita
+□ Screenshots preparados (mínimo 5)
+□ Ícone da loja otimizado
+□ Vídeo preview (opcional)
+□ Palavras-chave definidas
+□ Categoria selecionada
+□ Idade mínima definida
+
+INFRAESTRUTURA:
+□ Backend/API configurado (se aplicável)
+□ Bot do Telegram configurado
+□ Analytics configurado (opcional)
+□ Crash reporting ativo
+□ Monitoramento configurado
+
+DOCUMENTAÇÃO:
+□ README.md atualizado
+□ Guia de uso interno
+□ Changelog preparado
+□ Suporte preparado para responder usuários
+
+LEGAL:
+□ Política de privacidade publicada
+□ Termos de uso publicados
+□ Consentimentos implementados
+□ Informações de contato corretas
+
+🎉 CONCLUSÃO
+Resumo Executivo:
+Este documento contém TUDO necessário para implementar o App Estabiliza de forma completa e profissional:
+✅ Sistema de cores, tipografia e design completo
+✅ Todos os textos atualizados e humanizados
+✅ Componentes reutilizáveis especificados
+✅ Fluxos de navegação detalhados
+✅ Estrutura de dados definida
+✅ Notificações configuradas
+✅ Validações e segurança implementadas
+✅ Animações e feedback visual
+✅ Modo offline e sincronização
+✅ Sistema de conquistas/gamificação
+✅ Exportação de dados
+✅ Acessibilidade contemplada
+✅ Assets e ilustrações descritas
+✅ Privacidade e conformidade legal
+✅ Contatos de emergência incluídos
+✅ Métricas de sucesso definidas
+✅ Checklist de lançamento completo
+Informações Técnicas Críticas:
+javascriptconst CRITICAL_INFO = {
+  telegram: {
+    botToken: '8410080667:AAGCIqSUs3tL24K0KLAG4qA22KRNbHj__6w',
+    botUsername: '@estabiliza_suport_bot',
+  },
+  
+  app: {
+    name: 'Estabiliza',
+    version: '1.0.0',
+    bundleId: 'com.estabiliza.app',
+  },
+  
+  colors: {
+    primary: '#4A90E2',
+    secondary: '#7B68EE',
+    success: '#50C878',
+    error: '#FF6B6B',
+  },
+  
+  // ADICIONAR ANTES DO LANÇAMENTO:
+  contacts: {+5548996929261
+    whatsapp: '+5548996929261', // ⚠️ SUBSTITUIR
+    instagram: '@estabiliza',      },
+};
+
