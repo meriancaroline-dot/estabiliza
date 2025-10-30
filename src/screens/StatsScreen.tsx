@@ -1,20 +1,53 @@
-// src/screens/StatsScreen.tsx
-// -------------------------------------------------------------
-// 📊 Tela de Estatísticas — visão geral do progresso
-// -------------------------------------------------------------
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
 import { useStats } from '@/hooks/useStats';
+import { Button } from '@/components/Button';
+import { generatePDFReport, sharePDF } from '@/services/PDFService';
 
-// -------------------------------------------------------------
-// Tela principal
-// -------------------------------------------------------------
 export default function StatsScreen() {
   const { theme } = useTheme();
   const { stats, completionRates, summary } = useStats();
-
   const styles = createStyles(theme);
+
+  const handleExportPDF = async () => {
+    try {
+      const uri = await generatePDFReport({
+        stats: {
+          mood: {
+            average: stats?.moodAverage ?? 0,
+            goodDays: stats?.moodAverage && stats.moodAverage >= 3 ? Math.round(stats.moodAverage) : 0,
+            badDays: stats?.moodAverage && stats.moodAverage < 3 ? 1 : 0,
+            streak: stats?.streakLongest ?? 0,
+          },
+          habits: {
+            total: stats?.activeHabits ?? 0,
+            completed: stats?.completedTasks ?? 0,
+            consistency: completionRates.habitConsistency ?? 0,
+            bestHabit: summary?.consistency ?? '—',
+          },
+          reminders: {
+            total: stats?.totalReminders ?? 0,
+            done: stats?.completedReminders ?? 0,
+            pending: (stats?.totalReminders ?? 0) - (stats?.completedReminders ?? 0),
+          },
+          // Agora o summary usa as strings REAIS
+          summary: {
+            performance: summary.performance,
+            consistency: summary.consistency,
+            mood: summary.mood,
+          },
+        },
+        periodLabel: 'Relatório Semanal',
+        username: 'Merian',
+        theme,
+      });
+
+      await sharePDF(uri);
+    } catch (err) {
+      console.error('Erro ao gerar PDF:', err);
+    }
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -23,66 +56,39 @@ export default function StatsScreen() {
         Um resumo do seu progresso, conquistas e hábitos.
       </Text>
 
-      {/* Cards principais */}
       <View style={styles.cardGrid}>
-        <StatCard
-          label="Lembretes Criados"
-          value={stats?.totalReminders ?? 0}
-          color={theme.colors.primary}
-        />
-        <StatCard
-          label="Lembretes Concluídos"
-          value={stats?.completedReminders ?? 0}
-          color={theme.colors.success}
-        />
-        <StatCard
-          label="Hábitos Ativos"
-          value={stats?.activeHabits ?? 0}
-          color={theme.colors.secondary}
-        />
-        <StatCard
-          label="Tarefas Concluídas"
-          value={stats?.completedTasks ?? 0}
-          color={theme.colors.success}
-        />
+        <StatCard label="Lembretes Criados" value={stats?.totalReminders ?? 0} color={theme.colors.primary} />
+        <StatCard label="Lembretes Concluídos" value={stats?.completedReminders ?? 0} color={theme.colors.success} />
+        <StatCard label="Hábitos Ativos" value={stats?.activeHabits ?? 0} color={theme.colors.secondary} />
+        <StatCard label="Tarefas Concluídas" value={stats?.completedTasks ?? 0} color={theme.colors.success} />
         <StatCard
           label="Média de Humor"
-          value={stats?.moodAverage ? stats.moodAverage.toFixed(1) : '—'}
+          value={(stats?.moodAverage ?? 0).toFixed(1)}
           color={theme.colors.warning}
         />
-        <StatCard
-          label="Maior Sequência"
-          value={stats?.streakLongest ?? 0}
-          color={theme.colors.danger}
-        />
+        <StatCard label="Maior Sequência" value={stats?.streakLongest ?? 0} color={theme.colors.danger} />
       </View>
 
-      {/* Taxas de conclusão */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Taxas de Conclusão (%)</Text>
-        <StatRow
-          label="Lembretes"
-          value={completionRates.reminderRate}
-          color={theme.colors.primary}
-        />
-        <StatRow
-          label="Tarefas"
-          value={completionRates.taskRate}
-          color={theme.colors.success}
-        />
-        <StatRow
-          label="Consistência de Hábitos"
-          value={completionRates.habitConsistency}
-          color={theme.colors.secondary}
-        />
+        <StatRow label="Lembretes" value={completionRates.reminderRate} color={theme.colors.primary} />
+        <StatRow label="Tarefas" value={completionRates.taskRate} color={theme.colors.success} />
+        <StatRow label="Consistência de Hábitos" value={completionRates.habitConsistency} color={theme.colors.secondary} />
       </View>
 
-      {/* Resumo textual */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Resumo</Text>
         <Text style={styles.summaryText}>📈 Desempenho: {summary.performance}</Text>
         <Text style={styles.summaryText}>🔁 Consistência: {summary.consistency}</Text>
         <Text style={styles.summaryText}>😊 Humor: {summary.mood}</Text>
+      </View>
+
+      <View style={{ marginTop: 20, marginBottom: 30 }}>
+        <Button
+          title="📄 Exportar Relatório em PDF"
+          variant="secondary"
+          onPress={handleExportPDF}
+        />
       </View>
 
       <Text style={styles.updatedAt}>
@@ -93,18 +99,7 @@ export default function StatsScreen() {
   );
 }
 
-// -------------------------------------------------------------
-// 📦 Componentes auxiliares
-// -------------------------------------------------------------
-const StatCard = ({
-  label,
-  value,
-  color,
-}: {
-  label: string;
-  value: string | number;
-  color: string;
-}) => (
+const StatCard = ({ label, value, color }: { label: string; value: string | number; color: string }) => (
   <View
     style={{
       backgroundColor: color + '15',
@@ -117,44 +112,15 @@ const StatCard = ({
       margin: 6,
     }}
   >
-    <Text
-      style={{
-        fontSize: 28,
-        fontWeight: '700',
-        color,
-        textAlign: 'center',
-      }}
-    >
-      {value}
-    </Text>
-    <Text
-      style={{
-        color,
-        textAlign: 'center',
-        marginTop: 4,
-        fontSize: 13,
-        fontWeight: '600',
-      }}
-    >
-      {label}
-    </Text>
+    <Text style={{ fontSize: 28, fontWeight: '700', color, textAlign: 'center' }}>{value}</Text>
+    <Text style={{ color, textAlign: 'center', marginTop: 4, fontSize: 13, fontWeight: '600' }}>{label}</Text>
   </View>
 );
 
-const StatRow = ({
-  label,
-  value,
-  color,
-}: {
-  label: string;
-  value: number;
-  color: string;
-}) => (
+const StatRow = ({ label, value, color }: { label: string; value: number; color: string }) => (
   <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 4 }}>
     <Text style={{ color: themeColor(color, 0.8), fontSize: 14 }}>{label}</Text>
-    <Text style={{ color: themeColor(color, 1), fontWeight: '700' }}>
-      {value.toFixed(1)}%
-    </Text>
+    <Text style={{ color: themeColor(color, 1), fontWeight: '700' }}>{value.toFixed(1)}%</Text>
   </View>
 );
 
@@ -162,9 +128,6 @@ function themeColor(color: string, opacity: number) {
   return color + Math.round(opacity * 255).toString(16);
 }
 
-// -------------------------------------------------------------
-// 🗓️ Helper
-// -------------------------------------------------------------
 function formatDate(iso: string) {
   try {
     const [y, m, d] = iso.split('T')[0].split('-');
@@ -174,9 +137,6 @@ function formatDate(iso: string) {
   }
 }
 
-// -------------------------------------------------------------
-// 💅 Estilos
-// -------------------------------------------------------------
 const createStyles = (theme: ReturnType<typeof useTheme>['theme']) =>
   StyleSheet.create({
     container: {

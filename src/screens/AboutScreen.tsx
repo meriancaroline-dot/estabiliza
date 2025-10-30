@@ -1,9 +1,8 @@
-// src/screens/AboutScreen.tsx
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useTheme } from '@/hooks/useTheme';
 import { useAppVersion } from '@/hooks/useAppVersion';
-import { Button } from '@/components/Button'; // ← você disse pra manter esse import
+import { Button } from '@/components/Button';
 
 export default function AboutScreen() {
   const { theme } = useTheme();
@@ -47,9 +46,8 @@ export default function AboutScreen() {
         <Button
           title="Aplicar atualização"
           onPress={applyUpdate}
-          // desabilita se não há update
           disabled={!updateAvailable}
-          variant="outline"
+          variant="secondary" // ← substitui "outline" por algo suportado
         />
       </View>
 

@@ -3,7 +3,7 @@
 // Hook customizado para interagir com o NotificationContext
 // -------------------------------------------------------------
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useMemo } from 'react';
 import * as Notifications from 'expo-notifications';
 import { useNotifications as useNotificationContext } from '@/contexts/NotificationContext';
 import { Reminder } from '@/types/models';
@@ -36,7 +36,7 @@ interface UseNotificationsReturn {
 export function useNotifications(): UseNotificationsReturn {
   const {
     permissionGranted,
-    scheduled,
+    scheduled: rawScheduled,
     requestPermission,
     refreshScheduled,
     cancelNotification,
@@ -46,6 +46,23 @@ export function useNotifications(): UseNotificationsReturn {
   } = useNotificationContext();
 
   const [initialized, setInitialized] = useState(false);
+
+  // -----------------------------------------------------------
+  // Transforma NotificationRequest[] em ScheduledNotification[]
+  // -----------------------------------------------------------
+  const scheduled = useMemo(() => {
+    return rawScheduled.map((notif) => ({
+      id: notif.identifier,
+      title: notif.content.title || '',
+      body: notif.content.body || '',
+      date: notif.trigger && 'date' in notif.trigger 
+        ? new Date((notif.trigger as any).date || (notif.trigger as any).value || Date.now())
+        : new Date(),
+      repeat: notif.trigger && 'repeats' in notif.trigger && notif.trigger.repeats
+        ? ('daily' as const)
+        : ('none' as const),
+    }));
+  }, [rawScheduled]);
 
   // -----------------------------------------------------------
   // Cancela lembrete específico

@@ -1,12 +1,5 @@
 // App.tsx
-// -------------------------------------------------------------
-// Ponto de entrada do app Estabiliza
-// - ThemeProvider (troca de tema em tempo real)
-// - Providers globais (User, Notifications)
-// - NavigationContainer único com tema dinâmico
-// -------------------------------------------------------------
 import 'react-native-reanimated';
-
 import React from 'react';
 import { StatusBar } from 'react-native';
 import {
@@ -21,13 +14,14 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import AppNavigator from '@/navigation/AppNavigator';
 import { UserProvider } from '@/contexts/UserContext';
 import { NotificationProvider } from '@/contexts/NotificationContext';
+import { WellnessProvider } from '@/contexts/WellnessContext';
 import { ThemeProvider, useTheme } from '@/hooks/useTheme';
 import { useMoodPrompts } from '@/hooks/useMoodPrompts';
 
-function ThemedNavigation() {
+function InnerNavigation() {
   const { theme, isDark } = useTheme();
-
   const base = isDark ? NavDarkTheme : NavDefaultTheme;
+
   const navTheme: NavTheme = {
     ...base,
     colors: {
@@ -41,7 +35,6 @@ function ThemedNavigation() {
     },
   };
 
-  // Agenda as três notificações diárias de humor
   useMoodPrompts();
 
   return (
@@ -51,7 +44,6 @@ function ThemedNavigation() {
         backgroundColor={theme.colors.background}
       />
       <NavigationContainer theme={navTheme}>
-        {/* ATENÇÃO: AppNavigator NÃO deve criar outro NavigationContainer */}
         <AppNavigator />
       </NavigationContainer>
     </>
@@ -64,9 +56,11 @@ export default function App() {
       <SafeAreaProvider>
         <ThemeProvider>
           <UserProvider>
-            <NotificationProvider>
-              <ThemedNavigation />
-            </NotificationProvider>
+            <WellnessProvider>
+              <NotificationProvider>
+                <InnerNavigation />
+              </NotificationProvider>
+            </WellnessProvider>
           </UserProvider>
         </ThemeProvider>
       </SafeAreaProvider>

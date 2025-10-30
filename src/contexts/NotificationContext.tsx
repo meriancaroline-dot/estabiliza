@@ -61,10 +61,8 @@ export const NotificationProvider: React.FC<React.PropsWithChildren> = ({
   const requestPermission = useCallback(async () => {
     const { status } = await Notifications.requestPermissionsAsync();
 
-    // ✅ Compatível com SDK 54
-    const granted =
-      status === Notifications.PermissionStatus.GRANTED ||
-      status === Notifications.PermissionStatus.LIMITED;
+    // ✅ Compatível com SDK 54 (sem LIMITED)
+    const granted = status === Notifications.PermissionStatus.GRANTED;
 
     setPermissionGranted(granted);
 
@@ -163,9 +161,7 @@ export const NotificationProvider: React.FC<React.PropsWithChildren> = ({
   useEffect(() => {
     (async () => {
       const settings = await Notifications.getPermissionsAsync();
-      const granted =
-        settings.status === Notifications.PermissionStatus.GRANTED ||
-        settings.status === Notifications.PermissionStatus.LIMITED;
+      const granted = settings.status === Notifications.PermissionStatus.GRANTED;
 
       setPermissionGranted(granted);
       await refreshScheduled();

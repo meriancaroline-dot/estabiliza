@@ -1,6 +1,9 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useColorScheme } from 'react-native';
+import { lightColors, darkColors } from '../theme/colors';
+import { spacing } from '../theme/spacing';
+import { borderRadius } from '../theme';
 
 // -------------------------------------------------------------
 // Tipos
@@ -19,69 +22,47 @@ type Palette = {
   surface: string;
   border: string;
   muted?: string;
+  glass?: string;
+  overlay?: string;
   neutral: Record<number, string>;
+  accent?: {
+    lavender: string;
+    mint: string;
+    peach: string;
+    rose: string;
+    sky: string;
+  };
 };
 
 export type Theme = {
   mode: ThemeMode;
   isDark: boolean;
   colors: Palette;
-  spacing: { xs: number; sm: number; md: number; lg: number; xl: number };
-  borderRadius: { sm: number; md: number; lg: number; xl: number };
-};
-
-// -------------------------------------------------------------
-// Paletas
-// -------------------------------------------------------------
-const lightColors: Palette = {
-  primary: '#6C5CE7',
-  secondary: '#00BCD4',
-  success: '#2ecc71',
-  warning: '#f1c40f',
-  danger: '#e74c3c',
-  text: '#1f2937',
-  textSecondary: '#6b7280',
-  background: '#ffffff',
-  surface: '#f8fafc',
-  border: '#e5e7eb',
-  muted: '#a1a1aa',
-  neutral: { 500: '#9ca3af' },
-};
-
-const darkColors: Palette = {
-  primary: '#8B7BFF',
-  secondary: '#00D1E6',
-  success: '#27ae60',
-  warning: '#f39c12',
-  danger: '#ff6b6b',
-  text: '#e5e7eb',
-  textSecondary: '#9ca3af',
-  background: '#0b1220',
-  surface: '#111827',
-  border: '#1f2937',
-  muted: '#6b7280',
-  neutral: { 500: '#6b7280' },
+  spacing: { xxs: number; xs: number; sm: number; md: number; lg: number; xl: number; xxl: number; xxxl: number; huge: number; massive: number };
+  borderRadius: { sm: number; md: number; lg: number; xl: number; xxl: number; round: number };
 };
 
 // -------------------------------------------------------------
 // Contexto
 // -------------------------------------------------------------
-type Ctx = {
+type ThemeContextType = {
   theme: Theme;
   isDark: boolean;
   mode: ThemeMode;
   setThemeMode: (m: ThemeMode) => Promise<void>;
+  toggleTheme: () => Promise<void>;
 };
 
-const ThemeCtx = createContext<Ctx | null>(null);
+const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // -------------------------------------------------------------
 // Provider
 // -------------------------------------------------------------
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const sys = useColorScheme(); // 'light' | 'dark' | null
+export const ThemeProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+  const sys = useColorScheme() || 'light';
   const [mode, setMode] = useState<ThemeMode>('system');
 
+  // Carrega o modo salvo
   useEffect(() => {
     (async () => {
       try {
@@ -95,22 +76,25 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     })();
   }, []);
 
+  // Define se é dark
   const isDark = useMemo(() => {
     if (mode === 'system') return sys === 'dark';
     return mode === 'dark';
   }, [mode, sys]);
 
+  // Define o tema completo - AGORA USANDO OS TEMAS PASTEL
   const theme: Theme = useMemo(
     () => ({
       mode,
       isDark,
       colors: isDark ? darkColors : lightColors,
-      spacing: { xs: 4, sm: 8, md: 12, lg: 16, xl: 24 },
-      borderRadius: { sm: 6, md: 10, lg: 14, xl: 22 },
+      spacing,
+      borderRadius,
     }),
     [isDark, mode]
   );
 
+  // Salva novo modo
   const setThemeMode = async (m: ThemeMode) => {
     try {
       setMode(m);
@@ -120,16 +104,39 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const value: Ctx = { theme, isDark, mode, setThemeMode };
+  // Toggle de tema
+  const toggleTheme = async () => {
+    const next =
+      mode === 'light'
+        ? 'dark'
+        : mode === 'dark'
+        ? 'light'
+        : sys === 'dark'
+        ? 'light'
+        : 'dark';
 
-  return <ThemeCtx.Provider value={value}>{children}</ThemeCtx.Provider>;
-}
+    await setThemeMode(next);
+  };
+
+  const value = useMemo(
+    () => ({
+      theme,
+      isDark,
+      mode,
+      setThemeMode,
+      toggleTheme,
+    }),
+    [theme, isDark, mode]
+  );
+
+  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+};
 
 // -------------------------------------------------------------
 // Hook
 // -------------------------------------------------------------
 export function useTheme() {
-  const ctx = useContext(ThemeCtx);
+  const ctx = useContext(ThemeContext);
   if (!ctx) throw new Error('useTheme deve ser usado dentro de ThemeProvider');
   return ctx;
 }
