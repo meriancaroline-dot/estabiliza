@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "Estabiliza",
+    "slug": "estabiliza",
+    "scheme": "estabiliza",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": ["**/*"],
+
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.seunome.estabiliza",
+      "infoPlist": {
+        "UIBackgroundModes": ["remote-notification"]
+      }
+    },
+
+    "android": {
+      "package": "com.seunome.estabiliza",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "permissions": ["android.permission.POST_NOTIFICATIONS"],
+      "softwareKeyboardLayoutMode": "pan"
+    },
+
+    "plugins": [
+      "expo-notifications"
+    ]
+  }
+}
